@@ -59,7 +59,7 @@
       </VBox>
       <HBox fx:id="HBoxBtnAddRC" layoutX="23.0" layoutY="685.0" prefHeight="33.0" prefWidth="594.0">
          <children>
-            <Button fx:id="BtnAddRemoveM" mnemonicParsing="false" text="Add/Remove Movie" />
+            <Button fx:id="BtnAddRemoveM" mnemonicParsing="false" text="Add/Remove Movie"  onAction="#onAddRemoveM"/>
             <Button fx:id="BtnAddRemoveC" mnemonicParsing="false" prefHeight="26.0" prefWidth="163.0" text="Add/Remove Category">
                <HBox.margin>
                   <Insets left="58.0" />

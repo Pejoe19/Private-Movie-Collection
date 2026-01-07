@@ -134,4 +134,51 @@ public class Controller {
         stage.show();
     }
 
+    @FXML
+    private void onAddRemoveM(ActionEvent event) {
+        Movie selectedMovie = (Movie) tblView.getSelectionModel().getSelectedItem();
+
+        if (selectedMovie == null) {
+            openMovieEditorCreate();
+        } else {
+            openMovieEditorEdit(selectedMovie);
+        }
+    }
+
+    private void openMovieEditorCreate() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/dk/easv/privatemoviecollection/movieEditView.fxml")
+            );
+            Scene scene = new Scene(loader.load());
+            MovieEditController controller = loader.getController();
+            controller.showCreateMode();
+            Stage stage = new Stage();
+            stage.setTitle("Add Movie");
+            stage.setScene(scene);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openMovieEditorEdit(Movie movie) {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/dk/easv/privatemoviecollection/movieEditView.fxml")
+            );
+            Scene scene = new Scene(loader.load());
+            MovieEditController controller = loader.getController();
+            controller.showEditMode();
+            Stage stage = new Stage();
+            stage.setTitle("Edit Movie");
+            stage.setScene(scene);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
