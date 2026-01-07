@@ -1,5 +1,7 @@
 package dk.easv.privatemoviecollection.Be;
 
+import javafx.scene.image.Image;
+
 import java.util.Date;
 
 public class Movie {
@@ -10,6 +12,8 @@ public class Movie {
     private float imdbRating;
     private float personalRating;
     private String filePath;
+    private Image image;
+    private String overview;
     private Date lastViewed;
 
     public Movie(int id, String name, String categories, float imdbRating, float personalRating, String filePath, Date lastViewed) {
@@ -19,7 +23,21 @@ public class Movie {
         this.imdbRating = imdbRating;
         this.personalRating = personalRating;
         this.filePath = filePath;
+        this.image = null;
+        this.overview = null;
         this.lastViewed = lastViewed;
+    }
+
+    public Movie(String name, String categories, String overview, String filePath) {
+        Id = 0;
+        this.name = name;
+        this.categories = categories;
+        this.imdbRating = 0;
+        this.personalRating = 0;
+        this.filePath = filePath;
+        this.image = null;
+        this.overview = overview;
+        this.lastViewed = null;
     }
 
     public int getId() {
@@ -68,6 +86,22 @@ public class Movie {
 
     public void setFilePath(String filePath) {
         this.filePath = filePath;
+    }
+
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
+    }
+
+    public String getOverview() {
+        return overview;
+    }
+
+    public void setOverview(String overview) {
+        this.overview = overview;
     }
 
     public Date getLastViewed() {

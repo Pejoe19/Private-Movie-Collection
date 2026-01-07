@@ -2,10 +2,13 @@ package dk.easv.privatemoviecollection.DAL;
 
 import dk.easv.privatemoviecollection.Be.Movie;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,10 +25,10 @@ public class MovieDAO {
         try (Connection conn = dbConnector.getConnection();
              Statement stmt = conn.createStatement()) {
 
-            String sql = "Select Movies.Id, Movies.Name, STRING_AGG(C.Name, ', ') AS Categories, Movies.ImdbRating AS \"IMDB Rating\", Movies.PersonalRating AS \"Personal Rating\", Movies.FileLink, Movies.LastView from Vores_Gruppe_Private_Movie_Collection.dbo.Movies\n" +
-                    "JOIN dbo.CatMovie CM on Movies.Id = CM.MovieId\n" +
+            String sql = "Select Movie.Id, Movie.Name, STRING_AGG(C.Name, ', ') AS Categories, Movie.ImdbRating AS \"IMDB Rating\", Movie.PersonalRating AS \"Personal Rating\", Movie.FileLink, Movie.LastView from Vores_Gruppe_Private_Movie_Collection.dbo.Movie\n" +
+                    "JOIN dbo.CatMovie CM on Movie.Id = CM.MovieId\n" +
                     "JOIN dbo.Category C on C.Id = CM.CategoryId\n" +
-                    "group by Movies.Id, Movies.Name, Movies.ImdbRating, Movies.PersonalRating, Movies.FileLink, Movies.LastView";
+                    "group by Movie.Id, Movie.Name, Movie.ImdbRating, Movie.PersonalRating, Movie.FileLink, Movie.LastView";
             ResultSet rs = stmt.executeQuery(sql);
 
             while (rs.next()) {
@@ -47,4 +50,21 @@ public class MovieDAO {
         return movies;
     }
 
+    public Movie updateMovieLastViewed(Movie movie, LocalDate today) {
+        try (Connection conn = dbConnector.getConnection()) {
+            PreparedStatement ps = conn.prepareStatement(
+                    "UPDATE dbo.Movie " +
+                            "SET LastView = ? " +
+                            "WHERE Id = ?"
+            );
+
+            ps.setDate(1, java.sql.Date.valueOf(today));
+            ps.setInt(2, movie.getId());
+            ps.executeUpdate();
+
+            return movie;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
