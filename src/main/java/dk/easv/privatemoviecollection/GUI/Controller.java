@@ -12,3 +12,4 @@ public class Controller {
         welcomeText.setText("Welcome to JavaFX Application!");
     }
 }
+// Test kommentar
