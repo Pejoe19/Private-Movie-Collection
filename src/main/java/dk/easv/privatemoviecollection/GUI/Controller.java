@@ -1,15 +1,135 @@
 package dk.easv.privatemoviecollection.GUI;
 
+import dk.easv.privatemoviecollection.Be.Movie;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import org.kordamp.ikonli.javafx.FontIcon;
+
+import java.io.IOException;
+
 
 public class Controller {
     @FXML
-    private Label welcomeText;
+    private TableColumn tblColName;
+    @FXML
+    private TableColumn tblColGenre;
+    @FXML
+    private TableColumn tblColIMDbRating;
+    @FXML
+    private TableColumn tblColPRating;
+    @FXML
+    private TableColumn<Movie, Void> tblColButton;
+    @FXML
+    private TableColumn tblColImage;
+    @FXML
+    private TableView tblView;
+
+    Model model = new Model();
+
+    public Controller() throws IOException {
+    }
 
     @FXML
-    protected void onHelloButtonClick() {
-        welcomeText.setText("Welcome to JavaFX Application!");
+    public void initialize(){
+        setupTable();
+        tblView.setItems(model.getMovies());
     }
+
+    private void setupTable() {
+        tblColImage.setCellValueFactory(new PropertyValueFactory<>("filePath"));
+        tblColName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        tblColGenre.setCellValueFactory(new PropertyValueFactory<>("categories"));
+        tblColIMDbRating.setCellValueFactory(new PropertyValueFactory<>("imdbRating"));
+        tblColPRating.setCellValueFactory(new PropertyValueFactory<>("personalRating"));
+
+        tblColImage.setCellFactory(col -> new TableCell<Movie, String>() {
+
+            private final ImageView imageView = new ImageView();
+
+            {
+                imageView.setFitHeight(110);
+                imageView.setPreserveRatio(true);
+            }
+
+            @Override
+            protected void updateItem(String imagePath, boolean empty) {
+                super.updateItem(imagePath, empty);
+
+                if (empty || imagePath == null) {
+                    setGraphic(null);
+                } else {
+                    Image image = new Image(
+                            getClass().getResourceAsStream(imagePath)
+                    );
+                    imageView.setImage(image);
+                    setGraphic(imageView);
+                }
+            }
+        });
+        tblColButton.setCellFactory(col -> new TableCell<Movie, Void>() {
+
+            private final Button btnMore = new Button();
+
+            {
+                FontIcon icon = new FontIcon("fas-arrow-right");
+                btnMore.setGraphic(icon);
+
+                btnMore.setOnAction(event -> {
+                    Movie movie = getTableRow().getItem();
+                    if (movie != null) {
+                        onShowDetails(event, movie);
+                    }
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(btnMore);
+                }
+            }
+        });
+    }
+
+    private void onShowDetails(ActionEvent actionEvent, Movie movie) {
+
+        // Loads the new fxml file
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/dk/easv/privatemoviecollection/movieView.fxml"));
+        Scene scene = null;
+        try {
+            scene = new Scene(loader.load());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        // Set this controller as a parent controller for the new controller
+        MovieController movieController = loader.getController();
+        movieController.setParent(this);
+        movieController.init(movie);
+
+        Stage stage = new Stage();
+        stage.setScene(scene);
+
+        // Locks the old window while the new window is open
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.initOwner(((Node) actionEvent.getSource()).getScene().getWindow());
+        stage.setResizable(false);
+
+        stage.show();
+    }
+
 }
-// Test kommentar
