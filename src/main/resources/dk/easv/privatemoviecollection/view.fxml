@@ -1,16 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
-
 <?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="dk.easv.privatemoviecollection.GUI.Controller">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
-</VBox>
+<AnchorPane fx:id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="755.0" prefWidth="645.0" style="-fx-background-image: MovieCollectionImage;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label fx:id="LabelPMC" alignment="TOP_CENTER" layoutX="24.0" layoutY="32.0" prefHeight="30.0" prefWidth="596.0" text="Private Movie Collection" textAlignment="CENTER">
+         <font>
+            <Font name="Arial" size="24.0" />
+         </font>
+      </Label>
+      <ImageView fx:id="ImageV" blendMode="MULTIPLY" fitHeight="759.0" fitWidth="645.0" layoutY="-1.0" opacity="0.47">
+         <image>
+            <Image url="@MovieCollectionImage.png" />
+         </image>
+      </ImageView>
+      <HBox fx:id="HBoxSF" layoutX="24.0" layoutY="98.0" prefHeight="26.0" prefWidth="596.0">
+         <children>
+            <ComboBox fx:id="CBSort" prefHeight="26.0" prefWidth="300.0" promptText="Sort" />
+            <ComboBox fx:id="CBFilter" layoutX="10.0" layoutY="10.0" prefHeight="26.0" prefWidth="300.0" promptText="Filter">
+               <HBox.margin>
+                  <Insets left="50.0" />
+               </HBox.margin>
+            </ComboBox>
+         </children>
+      </HBox>
+      <HBox fx:id="HBoxTFBSearch" layoutX="23.0" layoutY="146.0" prefHeight="27.0" prefWidth="597.0">
+         <children>
+            <TextField fx:id="TFSearchF" prefHeight="27.0" prefWidth="541.0" />
+            <Button fx:id="BtnSearch" mnemonicParsing="false" text="Search" />
+         </children>
+      </HBox>
+      <VBox fx:id="VBoxTVColumns" layoutX="23.0" layoutY="189.0" prefHeight="478.0" prefWidth="595.0">
+         <children>
+            <TableView fx:id="TBColumns" prefHeight="498.0" prefWidth="595.0">
+              <columns>
+                <TableColumn fx:id="ColumnName" prefWidth="296.6763401031494" text="Name" />
+                <TableColumn fx:id="ColumnGenre" minWidth="0.1177520751953125" prefWidth="105.32362365722656" text="Genre" />
+                  <TableColumn fx:id="ColumnIMDbRating" prefWidth="87.72604370117188" text="IMDb Rating" />
+                  <TableColumn fx:id="ColumnPRating" prefWidth="104.91314697265625" text="Personal Rating" />
+              </columns>
+            </TableView>
+         </children>
+      </VBox>
+      <HBox fx:id="HBoxBtnAddRC" layoutX="23.0" layoutY="685.0" prefHeight="33.0" prefWidth="594.0">
+         <children>
+            <Button fx:id="BtnAddRemoveM" mnemonicParsing="false" text="Add/Remove Movie" />
+            <Button fx:id="BtnAddRemoveC" mnemonicParsing="false" prefHeight="26.0" prefWidth="163.0" text="Add/Remove Category">
+               <HBox.margin>
+                  <Insets left="58.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="BtnAddChangePR" mnemonicParsing="false" prefHeight="26.0" prefWidth="187.0" text="Add/Change Personal Rating ">
+               <HBox.margin>
+                  <Insets left="58.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>
