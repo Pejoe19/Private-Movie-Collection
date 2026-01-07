@@ -15,4 +15,8 @@ public class Logic {
     public List<Movie> getMovies() {
         return movieDAO.getMovies();
     }
+
+    public void deleteMovie(Movie movie) {
+        movieDAO.deleteMovie(movie);
+    }
 }

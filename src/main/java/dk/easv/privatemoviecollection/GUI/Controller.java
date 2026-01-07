@@ -134,4 +134,69 @@ public class Controller {
         stage.show();
     }
 
+    @FXML
+    private void onAddRemoveM(ActionEvent event) {
+        Movie selectedMovie = (Movie) tblView.getSelectionModel().getSelectedItem();
+
+        if (selectedMovie == null) {
+            openMovieEditorCreate();
+        } else {
+            openMovieEditorEdit(selectedMovie);
+        }
+    }
+
+    private void showDeleteConfirmation(Movie movie) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Delete Movie");
+        alert.setHeaderText("Are you sure?");
+        alert.setContentText(
+                "The movie \"" + movie.getName() + "\" will be deleted from the collection."
+        );
+
+        if (alert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
+            deleteMovie(movie);
+        }
+    }
+
+    private void deleteMovie(Movie movie) {
+        model.deleteMovie(movie);
+        tblView.setItems(model.getMovies());
+    }
+
+    private void openMovieEditorCreate() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/dk/easv/privatemoviecollection/movieEditView.fxml")
+            );
+            Scene scene = new Scene(loader.load());
+            MovieEditController controller = loader.getController();
+            controller.showCreateMode();
+            Stage stage = new Stage();
+            stage.setTitle("Add Movie");
+            stage.setScene(scene);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openMovieEditorEdit(Movie movie) {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/dk/easv/privatemoviecollection/movieEditView.fxml")
+            );
+            Scene scene = new Scene(loader.load());
+            MovieEditController controller = loader.getController();
+            controller.showEditMode();
+            Stage stage = new Stage();
+            stage.setTitle("Edit Movie");
+            stage.setScene(scene);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
