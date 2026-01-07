@@ -145,6 +145,24 @@ public class Controller {
         }
     }
 
+    private void showDeleteConfirmation(Movie movie) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Delete Movie");
+        alert.setHeaderText("Are you sure?");
+        alert.setContentText(
+                "The movie \"" + movie.getName() + "\" will be deleted from the collection."
+        );
+
+        if (alert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
+            deleteMovie(movie);
+        }
+    }
+
+    private void deleteMovie(Movie movie) {
+        model.deleteMovie(movie);
+        tblView.setItems(model.getMovies());
+    }
+
     private void openMovieEditorCreate() {
         try {
             FXMLLoader loader = new FXMLLoader(

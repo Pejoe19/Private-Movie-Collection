@@ -4,6 +4,7 @@ import dk.easv.privatemoviecollection.Be.Movie;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -45,6 +46,27 @@ public class MovieDAO {
         }
 
         return movies;
+    }
+
+    public void deleteMovie(Movie movie) {
+        String deleteRelations = "DELETE FROM CatMovie WHERE MovieId = ?";
+        String deleteMovie = "DELETE FROM Movies WHERE Id = ?";
+
+        try (Connection conn = dbConnector.getConnection()) {
+
+            try (PreparedStatement stmt1 = conn.prepareStatement(deleteRelations)) {
+                stmt1.setInt(1, movie.getId());
+                stmt1.executeUpdate();
+            }
+
+            try (PreparedStatement stmt2 = conn.prepareStatement(deleteMovie)) {
+                stmt2.setInt(1, movie.getId());
+                stmt2.executeUpdate();
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

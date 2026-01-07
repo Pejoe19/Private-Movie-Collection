@@ -1,6 +1,7 @@
 package dk.easv.privatemoviecollection.GUI;
 
 import dk.easv.privatemoviecollection.BLL.Logic;
+import dk.easv.privatemoviecollection.Be.Movie;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -15,5 +16,9 @@ public class Model {
     public ObservableList getMovies() {
         ObservableList observableList = FXCollections.observableList(logic.getMovies());
         return observableList;
+    }
+
+    public void deleteMovie(Movie movie) {
+        logic.deleteMovie(movie);
     }
 }
