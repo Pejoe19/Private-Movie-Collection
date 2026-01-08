@@ -24,8 +24,6 @@ public class MovieController {
     @FXML
     private ImageView imgViewMovie;
     @FXML
-    private MediaView mediaView;
-    @FXML
     private Text txtImdbRating;
     @FXML
     private Text txtTitle;
@@ -34,7 +32,6 @@ public class MovieController {
     @FXML
     private Text txtCategories;
 
-    MediaPlayer mediaPlayer;
     Controller parentController;
     Model model;
     Movie movie;
@@ -48,19 +45,10 @@ public class MovieController {
         txtImdbRating.setText(String.valueOf(movie.getImdbRating()));
         txtPersonalRating.setText(String.valueOf(movie.getPersonalRating()));
 
-        Image image;
-        if (movie.getFilePath().contains("easv")) {
-            image = new Image(getClass().getResourceAsStream(movie.getFilePath()));
-        } else {
-            String imageUrl = "https://image.tmdb.org/t/p/w200" + movie.getFilePath();
-            image = new Image(imageUrl, true);
-        }
-        imgViewMovie.setImage(image);
+        Movie tmdbMovie = model.getMovieData(movie.getName().replace(" ","-"));
+        imgViewMovie.setImage(movie.getImage());
+        txtOverview.setText(tmdbMovie.getOverview());
 
-        File file = new File("src/main/resources/dk/easv/privatemoviecollection/videos/Optagelse2026-01-07_010703.mp4");
-        Media media = new Media(file.toURI().toString());
-        mediaPlayer = new MediaPlayer(media);
-        mediaView.setMediaPlayer(mediaPlayer);
     }
 
     public void setParent(Controller Controller) {
