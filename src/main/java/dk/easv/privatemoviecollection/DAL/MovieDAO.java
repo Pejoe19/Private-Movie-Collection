@@ -2,7 +2,6 @@ package dk.easv.privatemoviecollection.DAL;
 
 import dk.easv.privatemoviecollection.Be.Movie;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -26,8 +25,8 @@ public class MovieDAO {
              Statement stmt = conn.createStatement()) {
 
             String sql = "Select Movie.Id, Movie.Name, STRING_AGG(C.Name, ', ') AS Categories, Movie.ImdbRating AS \"IMDB Rating\", Movie.PersonalRating AS \"Personal Rating\", Movie.FileLink, Movie.LastView from Vores_Gruppe_Private_Movie_Collection.dbo.Movie\n" +
-                    "JOIN dbo.CatMovie CM on Movie.Id = CM.MovieId\n" +
-                    "JOIN dbo.Category C on C.Id = CM.CategoryId\n" +
+                    "LEFT JOIN dbo.CatMovie CM on Movie.Id = CM.MovieId\n" +
+                    "LEFT JOIN dbo.Category C on C.Id = CM.CategoryId\n" +
                     "group by Movie.Id, Movie.Name, Movie.ImdbRating, Movie.PersonalRating, Movie.FileLink, Movie.LastView";
             ResultSet rs = stmt.executeQuery(sql);
 
@@ -67,6 +66,7 @@ public class MovieDAO {
             throw new RuntimeException(e);
         }
     }
+
     public void deleteMovie(Movie movie) {
         String deleteRelations = "DELETE FROM CatMovie WHERE MovieId = ?";
         String deleteMovie = "DELETE FROM Movies WHERE Id = ?";
@@ -87,5 +87,6 @@ public class MovieDAO {
             throw new RuntimeException(e);
         }
     }
+
 
 }

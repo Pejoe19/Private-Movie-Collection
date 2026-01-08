@@ -18,7 +18,20 @@ public class Model {
         return observableList;
     }
 
+    public Movie getMovieData(String movieTitle) {
+        return logic.getMovieData(movieTitle);
+    }
+
+    public void updateMovieLastViewed(Movie movie) {
+        logic.updateMovieLastViewed(movie);
+    }
+
     public void deleteMovie(Movie movie) {
         logic.deleteMovie(movie);
+    }
+
+
+    public String getMovieTrailerString(Movie movie) {
+        return logic.getMovieTrailerString(movie);
     }
 }

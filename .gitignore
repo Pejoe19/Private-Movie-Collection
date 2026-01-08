@@ -38,6 +38,7 @@ Mac OS
 .DS_Store
 
 config/config.settings
+config/api.properties
 
 src/main/resources/temp/*
 src/main/resources/temp/!.gitignore

@@ -1,7 +1,5 @@
 package dk.easv.privatemoviecollection.GUI;
 
-// Test
-
 import dk.easv.privatemoviecollection.Be.Movie;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -36,12 +34,13 @@ public class Controller {
     private TableView tblView;
 
     Model model = new Model();
+    Image defaultImage = new Image(getClass().getResourceAsStream("/dk/easv/privatemoviecollection/pictures/3d-cinema-popcorn-cup.jpg"));
 
     public Controller() throws IOException {
     }
 
     @FXML
-    public void initialize(){
+    public void initialize() {
         setupTable();
         tblView.setItems(model.getMovies());
     }
@@ -56,7 +55,6 @@ public class Controller {
         tblColImage.setCellFactory(col -> new TableCell<Movie, String>() {
 
             private final ImageView imageView = new ImageView();
-
             {
                 imageView.setFitHeight(110);
                 imageView.setPreserveRatio(true);
@@ -67,14 +65,24 @@ public class Controller {
                 super.updateItem(imagePath, empty);
 
                 if (empty || imagePath == null) {
+                    imageView.setImage(defaultImage);
                     setGraphic(null);
-                } else {
-                    Image image = new Image(
-                            getClass().getResourceAsStream(imagePath)
-                    );
-                    imageView.setImage(image);
-                    setGraphic(imageView);
+                    return;
                 }
+
+                Movie movie = getTableRow().getItem();
+                if (movie == null) {
+                    setGraphic(null);
+                    return;
+                }
+
+                if (movie.getImage() == null) {
+                    String imageUrl = "https://image.tmdb.org/t/p/w200" + imagePath;
+                    movie.setImage(new Image(imageUrl, true)); // background loading
+                }
+
+                imageView.setImage(movie.getImage());
+                setGraphic(imageView);
             }
         });
         tblColButton.setCellFactory(col -> new TableCell<Movie, Void>() {
@@ -121,6 +129,7 @@ public class Controller {
         // Set this controller as a parent controller for the new controller
         MovieController movieController = loader.getController();
         movieController.setParent(this);
+        movieController.setModel(model);
         movieController.init(movie);
 
         Stage stage = new Stage();
@@ -132,17 +141,6 @@ public class Controller {
         stage.setResizable(false);
 
         stage.show();
-    }
-
-    @FXML
-    private void onAddRemoveM(ActionEvent event) {
-        Movie selectedMovie = (Movie) tblView.getSelectionModel().getSelectedItem();
-
-        if (selectedMovie == null) {
-            openMovieEditorCreate();
-        } else {
-            openMovieEditorEdit(selectedMovie);
-        }
     }
 
     private void showDeleteConfirmation(Movie movie) {
@@ -158,9 +156,15 @@ public class Controller {
         }
     }
 
-    private void deleteMovie(Movie movie) {
-        model.deleteMovie(movie);
-        tblView.setItems(model.getMovies());
+    @FXML
+    private void onAddRemoveM(ActionEvent event) {
+        Movie selectedMovie = (Movie) tblView.getSelectionModel().getSelectedItem();
+
+        if (selectedMovie == null) {
+            openMovieEditorCreate();
+        } else {
+            openMovieEditorEdit(selectedMovie);
+        }
     }
 
     private void openMovieEditorCreate() {
@@ -197,6 +201,12 @@ public class Controller {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+
+    private void deleteMovie(Movie movie) {
+        model.deleteMovie(movie);
+        tblView.setItems(model.getMovies());
     }
 
 }
