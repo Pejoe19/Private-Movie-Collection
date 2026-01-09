@@ -5,6 +5,8 @@ import dk.easv.privatemoviecollection.DAL.ApiMovieDAO;
 import dk.easv.privatemoviecollection.DAL.MovieDAO;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -25,7 +27,8 @@ public class Logic {
     }
 
     public Movie getMovieData(String movieTitle) {
-        return apiData.getMovieData(movieTitle);
+        String encoded = URLEncoder.encode(movieTitle, StandardCharsets.UTF_8);
+        return apiData.getMovieData(encoded);
     }
 
     public void updateMovieLastViewed(Movie movie) {
@@ -34,7 +37,8 @@ public class Logic {
     }
 
     public String getMovieTrailerString(Movie movie) {
-        Movie m = apiData.getMovieData(movie.getName().replace(" ","-"));
+        String encoded = URLEncoder.encode(movie.getName(), StandardCharsets.UTF_8);
+        Movie m = apiData.getMovieData(encoded);
         return m.getTrailerApiString();
     }
 }

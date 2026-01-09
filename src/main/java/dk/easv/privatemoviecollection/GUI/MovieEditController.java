@@ -18,11 +18,19 @@ public class MovieEditController {
     @FXML private TextField txtFilePath;
     @FXML private TextField txtCategories;
 
+    private Movie editingMovie;
+
     public void showCreateMode() {
         lblHeader.setText("Add Movie");
     }
 
-    public void showEditMode() {
+    public void showEditMode(Movie movie) {
         lblHeader.setText("Edit Movie");
+        editingMovie = movie;
+
+        txtTitle.setText(movie.getName());
+        txtImdbRating.setText(String.valueOf(movie.getImdbRating()));
+        txtPersonalRating.setText(String.valueOf(movie.getPersonalRating()));
+        txtFilePath.setText(movie.getFilePath());
     }
 }
