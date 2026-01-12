@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="755.0" prefWidth="645.0" style="-fx-background-image: MovieCollectionImage;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.easv.privatemoviecollection.GUI.Controller">
+<AnchorPane fx:id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="755.0" prefWidth="645.0" style="-fx-background-image: MovieCollectionImage;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.easv.privatemoviecollection.GUI.MainController">
    <children>
       <Label fx:id="LabelPMC" alignment="TOP_CENTER" layoutX="24.0" layoutY="32.0" prefHeight="30.0" prefWidth="596.0" text="Private Movie Collection" textAlignment="CENTER">
          <font>
@@ -48,8 +48,8 @@
             <TableView fx:id="tblView" prefHeight="498.0" prefWidth="595.0">
               <columns>
                   <TableColumn fx:id="tblColImage" maxWidth="100.0" minWidth="87.19997787475586" prefWidth="87.19997787475586" />
-                <TableColumn fx:id="tblColName" maxWidth="153.59999084472656" minWidth="100.0" prefWidth="152.00001525878906" text="Name" />
-                <TableColumn fx:id="tblColGenre" maxWidth="131.19996643066406" minWidth="77.60003662109375" prefWidth="92.79998779296875" text="Genre" />
+                 <TableColumn fx:id="tblColName" maxWidth="153.59999084472656" minWidth="100.0" prefWidth="122.4000244140625" text="Name" />
+                 <TableColumn fx:id="tblColGenre" maxWidth="131.19996643066406" minWidth="77.60003662109375" prefWidth="123.20002746582031" text="Genre" />
                   <TableColumn fx:id="tblColIMDbRating" maxWidth="124.800048828125" minWidth="84.800048828125" prefWidth="84.800048828125" text="IMDb Rating" />
                   <TableColumn fx:id="tblColPRating" maxWidth="119.199951171875" minWidth="94.39996337890625" prefWidth="104.0" text="Personal Rating" />
                   <TableColumn fx:id="tblColButton"/>
@@ -59,9 +59,9 @@
       </VBox>
       <HBox fx:id="HBoxBtnAddRC" layoutX="23.0" layoutY="685.0" prefHeight="33.0" prefWidth="594.0">
          <children>
-            <Button fx:id="BtnAddRemoveM" mnemonicParsing="false" text="Add/Remove Movie"  onAction="#onAddRemoveM"/>
-            <Button fx:id="BtnAddRemoveC" mnemonicParsing="false" prefHeight="26.0" prefWidth="163.0" text="Add/Remove Category">
-               <HBox.margin>
+            <Button fx:id="BtnAddRemoveM" mnemonicParsing="false" onAction="#onAddRemoveM" text="Add/Remove Movie" />
+            <Button mnemonicParsing="false" onAction="#onChangeGenre" prefHeight="26.0" prefWidth="163.0" text="Change Genres">
+            <HBox.margin>
                   <Insets left="58.0" />
                </HBox.margin>
             </Button>

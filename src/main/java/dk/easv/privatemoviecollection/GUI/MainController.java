@@ -17,7 +17,7 @@ import org.kordamp.ikonli.javafx.FontIcon;
 import java.io.IOException;
 
 
-public class Controller {
+public class MainController {
     @FXML
     private TableColumn tblColName;
     @FXML
@@ -36,7 +36,7 @@ public class Controller {
     Model model = new Model();
     Image defaultImage = new Image(getClass().getResourceAsStream("/dk/easv/privatemoviecollection/pictures/3d-cinema-popcorn-cup.jpg"));
 
-    public Controller() throws IOException {
+    public MainController() throws IOException {
     }
 
     @FXML
@@ -48,7 +48,7 @@ public class Controller {
     private void setupTable() {
         tblColImage.setCellValueFactory(new PropertyValueFactory<>("filePath"));
         tblColName.setCellValueFactory(new PropertyValueFactory<>("name"));
-        tblColGenre.setCellValueFactory(new PropertyValueFactory<>("categories"));
+        tblColGenre.setCellValueFactory(new PropertyValueFactory<>("genresString"));
         tblColIMDbRating.setCellValueFactory(new PropertyValueFactory<>("imdbRating"));
         tblColPRating.setCellValueFactory(new PropertyValueFactory<>("personalRating"));
 
@@ -115,16 +115,8 @@ public class Controller {
     }
 
     private void onShowDetails(ActionEvent actionEvent, Movie movie) {
-
-        // Loads the new fxml file
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/dk/easv/privatemoviecollection/movieView.fxml"));
-        Scene scene = null;
-        try {
-            scene = new Scene(loader.load());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        Scene scene = setScene(loader, "/dk/easv/privatemoviecollection/movieView.fxml");
 
         // Set this controller as a parent controller for the new controller
         MovieController movieController = loader.getController();
@@ -132,15 +124,7 @@ public class Controller {
         movieController.setModel(model);
         movieController.init(movie);
 
-        Stage stage = new Stage();
-        stage.setScene(scene);
-
-        // Locks the old window while the new window is open
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.initOwner(((Node) actionEvent.getSource()).getScene().getWindow());
-        stage.setResizable(false);
-
-        stage.show();
+        showStage(actionEvent, "MovieDetails", scene);
     }
 
     private void showDeleteConfirmation(Movie movie) {
@@ -161,25 +145,22 @@ public class Controller {
         Movie selectedMovie = (Movie) tblView.getSelectionModel().getSelectedItem();
 
         if (selectedMovie == null) {
-            openMovieEditorCreate();
+            openMovieEditorCreate(event);
         } else {
             showDeleteConfirmation(selectedMovie);
         }
     }
 
-    private void openMovieEditorCreate() {
+    private void openMovieEditorCreate(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/dk/easv/privatemoviecollection/movieEditView.fxml")
             );
             Scene scene = new Scene(loader.load());
+
             MovieEditController controller = loader.getController();
             controller.showCreateMode();
-            Stage stage = new Stage();
-            stage.setTitle("Add Movie");
-            stage.setScene(scene);
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.show();
+            showStage(event, "Add Movie", scene);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -188,6 +169,49 @@ public class Controller {
     private void deleteMovie(Movie movie) {
         model.deleteMovie(movie);
         tblView.setItems(model.getMovies());
+    }
+
+    public void onChangeGenre(ActionEvent actionEvent) {
+        Movie selectedMovie = (Movie) tblView.getSelectionModel().getSelectedItem();
+
+        if(selectedMovie != null){
+            FXMLLoader loader = new FXMLLoader();
+            Scene scene = setScene(loader, "/dk/easv/privatemoviecollection/movieGenreView.fxml");
+
+            // Set this controller as a parent controller for the new controller
+            MovieGenreController Controller = loader.getController();
+            Controller.setParent(this);
+            Controller.setModel(model);
+            Controller.init(selectedMovie);
+
+            showStage(actionEvent, "Edit Movie", scene);
+        }
+    }
+
+    private Scene setScene(FXMLLoader loader, String filePath) {
+        // Loads the new fxml file
+
+        loader.setLocation(getClass().getResource(filePath));
+        Scene scene = null;
+        try {
+            scene = new Scene(loader.load());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return scene;
+    }
+
+    private void showStage(ActionEvent actionEvent, String stageTitle, Scene scene) {
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.setTitle(stageTitle);
+
+        // Locks the old window while the new window is open
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.initOwner(((Node) actionEvent.getSource()).getScene().getWindow());
+        stage.setResizable(false);
+
+        stage.show();
     }
 
 }
