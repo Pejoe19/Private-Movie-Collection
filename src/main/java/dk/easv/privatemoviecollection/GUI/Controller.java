@@ -13,13 +13,15 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.kordamp.ikonli.javafx.FontIcon;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
+import dk.easv.privatemoviecollection.GUI.MovieEditController;
 
 import java.io.IOException;
+import java.io.File;
 
 
 public class Controller {
-    @FXML
-    private TableColumn tblColName;
     @FXML
     private TableColumn tblColGenre;
     @FXML
@@ -31,10 +33,25 @@ public class Controller {
     @FXML
     private TableColumn tblColImage;
     @FXML
-    private TableView tblView;
+    private TableView<Movie> tblView;
+    @FXML
+    private TableColumn<Movie, String> tblColName;
+    @FXML
+    private CheckBox CBTitle;
+    @FXML
+    private CheckBox CBCategory;
+    @FXML
+    private CheckBox CBMIMDbRating;
+    @FXML
+    private CheckBox CBMPersonalRating;
+    @FXML
+    private TextField TFSearchF;
+    @FXML
+    private Button btnCancel;
 
     Model model = new Model();
     Image defaultImage = new Image(getClass().getResourceAsStream("/dk/easv/privatemoviecollection/pictures/3d-cinema-popcorn-cup.jpg"));
+    private FilteredList<Movie> filteredMovies;
 
     public Controller() throws IOException {
     }
@@ -42,7 +59,90 @@ public class Controller {
     @FXML
     public void initialize() {
         setupTable();
-        tblView.setItems(model.getMovies());
+
+        filteredMovies = new FilteredList<>(
+                model.getMovies(),
+                movie -> true
+        );
+        SortedList<Movie> sortedMovies = new SortedList<>(filteredMovies);
+        sortedMovies.comparatorProperty().bind(tblView.comparatorProperty());
+
+        tblView.setItems(sortedMovies);
+
+        setupFiltering();
+    }
+
+    private void setupFiltering() {
+        TFSearchF.textProperty().addListener((observable, oldValue, newValue) -> applyFilters());
+        CBTitle.selectedProperty().addListener((obs, o, n) -> applyFilters());
+        CBCategory.selectedProperty().addListener((obs, o, n) -> applyFilters());
+        CBMIMDbRating.selectedProperty().addListener((obs, o, n) -> applyFilters());
+        CBMPersonalRating.selectedProperty().addListener((obs, o, n) -> applyFilters());
+    }
+
+    private void applyFilters() {
+
+        String searchText = TFSearchF.getText().toLowerCase().trim();
+
+        filteredMovies.setPredicate(movie -> {
+
+            // Hvis ingen filtre er valgt → vis alle
+            if (!CBTitle.isSelected() &&
+                    !CBCategory.isSelected() &&
+                    !CBMIMDbRating.isSelected() &&
+                    !CBMPersonalRating.isSelected()) {
+                return true;
+            }
+
+            boolean matches = false;
+
+            if (CBTitle.isSelected()) {
+                matches |= movie.getName().toLowerCase().contains(searchText);
+            }
+
+            if (CBCategory.isSelected()) {
+                matches |= movie.getCategoriesString().toLowerCase().contains(searchText);
+            }
+
+            if (CBMIMDbRating.isSelected()) {
+                try {
+                    float minRating = Float.parseFloat(searchText);
+                    matches |= movie.getImdbRating() >= minRating;
+                } catch (NumberFormatException ignored) {}
+            }
+
+            if (CBMPersonalRating.isSelected()) {
+                try {
+                    float minRating = Float.parseFloat(searchText);
+                    matches |= movie.getPersonalRating() >= minRating;
+                } catch (NumberFormatException ignored) {}
+            }
+
+            return matches;
+        });
+    }
+
+    private String extractTitleFromFile(File file) {
+        String fileName = file.getName();
+        int dotIndex = fileName.lastIndexOf('.');
+        if (dotIndex > 0) {
+            return fileName.substring(0, dotIndex);
+        } else {
+            return fileName;
+        }
+    }
+
+    private boolean isValidMovieFile(File file) {
+        String name = file.getName().toLowerCase();
+        return name.endsWith(".mp4") || name.endsWith(".mpeg4");
+    }
+
+    private void showInvalidFileAlert(File file) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Invalid File");
+        alert.setHeaderText("Invalid Movie File");
+        alert.setContentText("The selected file '" + file.getName() + "' is not a valid movie file. Use .mp4 or .mpeg4 files only..");
+        alert.showAndWait();
     }
 
     private void setupTable() {
@@ -192,7 +292,10 @@ public class Controller {
             );
             Scene scene = new Scene(loader.load());
             MovieEditController controller = loader.getController();
+            controller.setModel(model);
+            controller.setMovie(movie);
             controller.showEditMode();
+
             Stage stage = new Stage();
             stage.setTitle("Edit Movie");
             stage.setScene(scene);
@@ -203,10 +306,8 @@ public class Controller {
         }
     }
 
-
     private void deleteMovie(Movie movie) {
         model.deleteMovie(movie);
-        tblView.setItems(model.getMovies());
+        model.getMovies().remove(movie);
     }
-
 }

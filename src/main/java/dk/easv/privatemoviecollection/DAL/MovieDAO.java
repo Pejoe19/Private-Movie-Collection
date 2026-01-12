@@ -39,7 +39,7 @@ public class MovieDAO {
                 String filePath = rs.getString("FileLink");
                 Date lastViewed = rs.getDate("LastView");
 
-                movies.add(new Movie(id, name, category, imdbRating, personalRating, filePath, lastViewed));
+                movies.add(new Movie(name, category, imdbRating, filePath));
             }
 
         } catch (Exception e) {

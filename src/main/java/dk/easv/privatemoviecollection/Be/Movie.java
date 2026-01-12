@@ -9,7 +9,7 @@ public class Movie {
 
     private int Id;
     private String name;
-    private List<Integer> categories;
+    private String categories;
     private String categoriesString;
     private float imdbRating;
     private float personalRating;
@@ -19,8 +19,8 @@ public class Movie {
     private String overview;
     private Date lastViewed;
 
-    public Movie(int id, String name, String categories, float imdbRating, float personalRating, String filePath, Date lastViewed) {
-        Id = id;
+    public Movie(String name, String categories, float imdbRating, String filePath) {
+        this.Id = -1;
         this.name = name;
         this.categoriesString = categories;
         this.categories = null;
@@ -36,7 +36,7 @@ public class Movie {
     public Movie(String name, List<Integer> categories, String overview, String filePath, String trailerApiString) {
         Id = -1;
         this.name = name;
-        this.categories = categories;
+        this.categories = categories.toString();
         this.imdbRating = 0;
         this.personalRating = 0;
         this.filePath = filePath;
@@ -62,11 +62,11 @@ public class Movie {
         this.name = name;
     }
 
-    public List<Integer> getCategories() {
+    public String getCategories() {
         return categories;
     }
 
-    public void setCategories(List<Integer> categories) {
+    public void setCategories(String categories) {
         this.categories = categories;
     }
 
