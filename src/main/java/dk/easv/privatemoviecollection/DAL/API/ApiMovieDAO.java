@@ -1,7 +1,8 @@
-package dk.easv.privatemoviecollection.DAL;
+package dk.easv.privatemoviecollection.DAL.API;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dk.easv.privatemoviecollection.BLL.MovieException;
 import dk.easv.privatemoviecollection.Be.Genre;
 import dk.easv.privatemoviecollection.Be.Movie;
 
@@ -15,7 +16,7 @@ public class ApiMovieDAO {
     APIConnector apiConnector = new APIConnector();
     List<Genre> genres = new ArrayList<>();
 
-    public ApiMovieDAO() throws IOException {
+    public ApiMovieDAO() throws MovieException {
     }
 
     public Movie getMovieData(String movieTitle) {

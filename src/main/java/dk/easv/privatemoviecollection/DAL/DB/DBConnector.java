@@ -1,7 +1,8 @@
-package dk.easv.privatemoviecollection.DAL;
+package dk.easv.privatemoviecollection.DAL.DB;
 
 import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
+import dk.easv.privatemoviecollection.BLL.MovieException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,7 +17,7 @@ public class DBConnector {
     private static final String PROP_FILE = "config/config.settings";
     private SQLServerDataSource dataSource;
 
-    public DBConnector() throws IOException{
+    public DBConnector() throws MovieException {
         Properties databaseProperties = new Properties();
         try {
             databaseProperties.load(new FileInputStream(new File(PROP_FILE)));

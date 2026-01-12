@@ -19,13 +19,14 @@ public class MovieEditController {
     @FXML private TextField txtImdbRating;
     @FXML private TextField txtPersonalRating;
     @FXML private TextField txtFilePath;
-    @FXML private TextField txtCategories;
+    @FXML private TextField txtGenres;
     @FXML private Button btnSave;
     @FXML private Button btnCancel;
 
     private Model model;
     private boolean createMode = true;
     private Movie currentMovie;
+    private Movie editingMovie;
 
     public void showCreateMode() {
 
@@ -34,8 +35,9 @@ public class MovieEditController {
         btnSave.setText("Save Movie");
     }
 
-    public void showEditMode() {
+    public void showEditMode(Movie movie) {
         lblHeader.setText("Edit Movie");
+        editingMovie = movie;
         createMode = false;
         btnSave.setText("Save Changes");
     }
@@ -48,7 +50,7 @@ public class MovieEditController {
         this.currentMovie = movie;
 
         txtTitle.setText(movie.getName());
-        txtCategories.setText(movie.getCategoriesString());
+        txtGenres.setText(movie.getGenresString());
         txtImdbRating.setText(String.valueOf(movie.getImdbRating()));
         txtPersonalRating.setText(String.valueOf(movie.getPersonalRating()));
         txtFilePath.setText(movie.getFilePath());

@@ -9,8 +9,8 @@ public class Movie {
 
     private int Id;
     private String name;
-    private String categories;
-    private String categoriesString;
+    private List<Integer> genres;
+    private String genresString;
     private float imdbRating;
     private float personalRating;
     private String filePath;
@@ -19,11 +19,11 @@ public class Movie {
     private String overview;
     private Date lastViewed;
 
-    public Movie(String name, String categories, float imdbRating, String filePath) {
-        this.Id = -1;
+    public Movie(int id, String name, String genres, float imdbRating, float personalRating, String filePath, Date lastViewed) {
+        Id = id;
         this.name = name;
-        this.categoriesString = categories;
-        this.categories = null;
+        this.genresString = genres;
+        this.genres = null;
         this.imdbRating = imdbRating;
         this.personalRating = personalRating;
         this.filePath = filePath;
@@ -33,10 +33,10 @@ public class Movie {
         this.lastViewed = lastViewed;
     }
 
-    public Movie(String name, List<Integer> categories, String overview, String filePath, String trailerApiString) {
+    public Movie(String name, List<Integer> genres, String overview, String filePath, String trailerApiString) {
         Id = -1;
         this.name = name;
-        this.categories = categories.toString();
+        this.genres = genres;
         this.imdbRating = 0;
         this.personalRating = 0;
         this.filePath = filePath;
@@ -62,20 +62,20 @@ public class Movie {
         this.name = name;
     }
 
-    public String getCategories() {
-        return categories;
+    public List<Integer> getGenres() {
+        return genres;
     }
 
-    public void setCategories(String categories) {
-        this.categories = categories;
+    public void setGenres(List<Integer> genres) {
+        this.genres = genres;
     }
 
-    public String getCategoriesString() {
-        return categoriesString;
+    public String getGenresString() {
+        return genresString;
     }
 
-    public void setCategoriesString(String categoriesString) {
-        this.categoriesString = categoriesString;
+    public void setGenresString(String genresString) {
+        this.genresString = genresString;
     }
 
     public float getImdbRating() {
@@ -139,8 +139,8 @@ public class Movie {
         return "Movie{" +
                 "Id=" + Id +
                 ", name='" + name + '\'' +
-                ", categories=" + categories +
-                ", categoriesString='" + categoriesString + '\'' +
+                ", genres=" + genres +
+                ", genresString='" + genresString + '\'' +
                 ", imdbRating=" + imdbRating +
                 ", personalRating=" + personalRating +
                 ", filePath='" + filePath + '\'' +

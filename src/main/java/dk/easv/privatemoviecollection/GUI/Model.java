@@ -1,18 +1,22 @@
 package dk.easv.privatemoviecollection.GUI;
 
-import dk.easv.privatemoviecollection.BLL.Logic;
+import dk.easv.privatemoviecollection.BLL.MovieException;
+import dk.easv.privatemoviecollection.BLL.MovieManager;
+import dk.easv.privatemoviecollection.Be.Genre;
 import dk.easv.privatemoviecollection.Be.Movie;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import java.sql.*;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Model {
-    Logic logic = new Logic();
+    MovieManager logic = new MovieManager();
     private Connection connection;
-    private ObservableList<Movie> movies;
+    ObservableList<Movie> observableList;
 
-    public Model() throws IOException {
+    public Model() throws MovieException {
         try {
             String url = "jdbc:mysql://localhost:3306/privatemovie_collection";
             String user = "root";
@@ -24,10 +28,10 @@ public class Model {
     }
 
     public ObservableList<Movie> getMovies() {
-        if (movies == null) {
-            movies = FXCollections.observableList(logic.getMovies());
+        if (observableList == null) {
+            observableList = FXCollections.observableList(logic.getMovies());
         }
-        return movies;
+        return observableList;
     }
 
     public Movie getMovieData(String movieTitle) {
@@ -41,7 +45,6 @@ public class Model {
     public void deleteMovie(Movie movie) {
         logic.deleteMovie(movie);
     }
-
 
     public String getMovieTrailerString(Movie movie) {
         return logic.getMovieTrailerString(movie);
@@ -95,6 +98,22 @@ public class Model {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    public List<Genre> getGenres() {
+        return logic.getGenres();
+    }
+
+    public void updateGenres(Movie movie, ArrayList<Genre> genres) {
+        Movie updatedMovie = logic.updateGenres(movie, genres);
+        if (updatedMovie != null) {
+            for (int i = 0; i < observableList.size(); i++) {
+                if (observableList.get(i).getId() == updatedMovie.getId()) {
+                    observableList.set(i, updatedMovie);
+                    break;
+                }
+            }
         }
     }
 
