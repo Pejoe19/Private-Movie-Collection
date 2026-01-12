@@ -16,15 +16,12 @@ import javafx.stage.Stage;
 import org.kordamp.ikonli.javafx.FontIcon;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
-import dk.easv.privatemoviecollection.GUI.MovieEditController;
 
 import java.io.IOException;
 import java.io.File;
 
 
 public class MainController {
-    @FXML
-    private TableColumn tblColName;
     @FXML
     private TableColumn tblColGenre;
     @FXML
@@ -104,7 +101,7 @@ public class MainController {
             }
 
             if (CBCategory.isSelected()) {
-                matches |= movie.getCategoriesString().toLowerCase().contains(searchText);
+                matches |= movie.getGenresString().toLowerCase().contains(searchText);
             }
 
             if (CBMIMDbRating.isSelected()) {
@@ -231,7 +228,6 @@ public class MainController {
 
         // Set this controller as a parent controller for the new controller
         MovieController movieController = loader.getController();
-        movieController.setParent(this);
         movieController.setModel(model);
         movieController.init(movie);
 
@@ -271,15 +267,11 @@ public class MainController {
 
             MovieEditController controller = loader.getController();
             controller.showCreateMode();
+            controller.setModel(model);
             showStage(event, "Add Movie", scene);
         } catch (IOException e) {
             displayError(e);
         }
-    }
-
-    private void deleteMovie(Movie movie) {
-        model.deleteMovie(movie);
-        tblView.setItems(model.getMovies());
     }
 
     public void onChangeGenre(ActionEvent actionEvent) {
@@ -291,7 +283,6 @@ public class MainController {
 
             // Set this controller as a parent controller for the new controller
             MovieGenreController Controller = loader.getController();
-            Controller.setParent(this);
             Controller.setModel(model);
             Controller.init(selectedMovie);
 
@@ -305,14 +296,9 @@ public class MainController {
         loader.setLocation(getClass().getResource(filePath));
         Scene scene = null;
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/dk/easv/privatemoviecollection/movieEditView.fxml")
-            );
-            Scene scene = new Scene(loader.load());
+            scene = new Scene(loader.load());
             MovieEditController controller = loader.getController();
             controller.setModel(model);
-            controller.setMovie(movie);
-            controller.showEditMode();
 
             Stage stage = new Stage();
             stage.setTitle("Edit Movie");
@@ -322,16 +308,13 @@ public class MainController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return scene;
     }
 
     private void deleteMovie(Movie movie) {
         model.deleteMovie(movie);
         model.getMovies().remove(movie);
-            scene = new Scene(loader.load());
-        } catch (IOException e) {
-            displayError(e);
-        }
-        return scene;
+        tblView.setItems(model.getMovies());
     }
 
     private void showStage(ActionEvent actionEvent, String stageTitle, Scene scene) {

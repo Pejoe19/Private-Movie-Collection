@@ -31,9 +31,8 @@ public class MovieController {
     @FXML
     private Text txtGenres;
 
-    MainController parentController;
-    Model model;
-    Movie movie;
+    private Model model;
+    private Movie movie;
 
 
     public void init(Movie movie) {
@@ -54,10 +53,6 @@ public class MovieController {
         if (movie.getImage() != null) {
             imgViewMovie.setImage(movie.getImage());
         }
-    }
-
-    public void setParent(MainController Controller) {
-        parentController = Controller;
     }
 
     public void onBtnPlayMovie(ActionEvent actionEvent) {

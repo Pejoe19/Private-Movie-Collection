@@ -2,6 +2,7 @@ package dk.easv.privatemoviecollection.Be;
 
 import javafx.scene.image.Image;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -43,6 +44,19 @@ public class Movie {
         this.image = null;
         this.trailerApiString = trailerApiString;
         this.overview = overview;
+        this.lastViewed = null;
+    }
+
+    public Movie(String name, List<Integer> genres, float Imdb, float personalRating, String filePath) {
+        Id = -1;
+        this.name = name;
+        this.genres = genres;
+        this.imdbRating = Imdb;
+        this.personalRating = personalRating;
+        this.filePath = filePath;
+        this.image = null;
+        this.trailerApiString = "";
+        this.overview = "";
         this.lastViewed = null;
     }
 

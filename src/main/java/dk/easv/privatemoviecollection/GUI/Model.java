@@ -17,14 +17,14 @@ public class Model {
     ObservableList<Movie> observableList;
 
     public Model() throws MovieException {
-        try {
-            String url = "jdbc:mysql://localhost:3306/privatemovie_collection";
-            String user = "root";
-            String password = "root";
-            connection = DriverManager.getConnection(url, user, password);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            String url = "jdbc:mysql://localhost:3306/privatemovie_collection";
+//            String user = "root";
+//            String password = "root";
+//            connection = DriverManager.getConnection(url, user, password);
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public ObservableList<Movie> getMovies() {

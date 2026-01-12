@@ -1,25 +1,24 @@
 package dk.easv.privatemoviecollection.GUI;
 
+import dk.easv.privatemoviecollection.BLL.MovieException;
+import dk.easv.privatemoviecollection.Be.Genre;
 import dk.easv.privatemoviecollection.Be.Movie;
-import dk.easv.privatemoviecollection.GUI.Model;
-import javafx.embed.swing.JFXPanel;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
-import java.io.IOException;
-import java.io.File;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MovieEditController {
 
+    @FXML private ChoiceBox cbGenre;
     @FXML private Label lblHeader;
     @FXML private TextField txtTitle;
     @FXML private TextField txtImdbRating;
     @FXML private TextField txtPersonalRating;
     @FXML private TextField txtFilePath;
-    @FXML private TextField txtGenres;
     @FXML private Button btnSave;
     @FXML private Button btnCancel;
 
@@ -27,6 +26,14 @@ public class MovieEditController {
     private boolean createMode = true;
     private Movie currentMovie;
     private Movie editingMovie;
+
+    public MovieEditController() {
+    }
+
+    public void initialize() {
+       List<Genre> genres = model.getGenres();
+       cbGenre.setItems(FXCollections.observableList(genres));
+   }
 
     public void showCreateMode() {
 
@@ -50,7 +57,7 @@ public class MovieEditController {
         this.currentMovie = movie;
 
         txtTitle.setText(movie.getName());
-        txtGenres.setText(movie.getGenresString());
+        cbGenre.setValue(movie.getGenresString());
         txtImdbRating.setText(String.valueOf(movie.getImdbRating()));
         txtPersonalRating.setText(String.valueOf(movie.getPersonalRating()));
         txtFilePath.setText(movie.getFilePath());
@@ -62,12 +69,18 @@ public class MovieEditController {
     private void onSave() {
 
         String title = txtTitle.getText().trim();
-        String categories = txtCategories.getText().trim();
-        String filePath = txtFilePath.getText().trim();
+        List<Integer> genreIds = new ArrayList<>();
+        String genres = cbGenre.getValue().toString();
+        List<Genre> allGenres = model.getGenres();
+        for(Genre genre : allGenres) {
+            if(genre.getName().equals(genres)) {
+                genreIds.add(genre.getId());
+            }
+        }
 
+        String filePath = txtFilePath.getText().trim();
         float imdbRating;
         float personalRating;
-
         try {
             imdbRating = Float.parseFloat(txtImdbRating.getText().trim());
             personalRating = Float.parseFloat(txtPersonalRating.getText().trim());
@@ -77,12 +90,11 @@ public class MovieEditController {
         }
 
         if (createMode) {
-            Movie movie = new Movie(title, categories, imdbRating, filePath);
-            movie.setPersonalRating(personalRating);
+            Movie movie = new Movie(title, genreIds, imdbRating, personalRating, filePath);
             model.createMovie(movie);
         } else {
             currentMovie.setName(title);
-            currentMovie.setCategories(categories);
+            currentMovie.setGenres(genreIds);
             currentMovie.setImdbRating(imdbRating);
             currentMovie.setPersonalRating(personalRating);
             currentMovie.setFilePath(filePath);
