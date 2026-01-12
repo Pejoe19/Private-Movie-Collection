@@ -46,8 +46,6 @@ public class MainController {
     private CheckBox CBMPersonalRating;
     @FXML
     private TextField TFSearchF;
-    @FXML
-    private Button btnCancel;
 
     Model model = new Model();
     Image defaultImage = new Image(getClass().getResourceAsStream("/dk/easv/privatemoviecollection/pictures/3d-cinema-popcorn-cup.jpg"));
@@ -248,24 +246,26 @@ public class MainController {
     }
 
     @FXML
-    private void onAddRemoveM(ActionEvent event) {
-        Movie selectedMovie = (Movie) tblView.getSelectionModel().getSelectedItem();
+    private void onAddMovie(ActionEvent event) {
+        openMovieEditorCreate(event);
+    }
 
-        if (selectedMovie == null) {
-            openMovieEditorCreate(event);
-        } else {
+    @FXML
+    private void onDeleteMovie(){
+        Movie selectedMovie = tblView.getSelectionModel().getSelectedItem();
+        if(selectedMovie != null){
             showDeleteConfirmation(selectedMovie);
         }
-    }
+    };
 
     private void openMovieEditorCreate(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/dk/easv/privatemoviecollection/movieEditView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/dk/easv/privatemoviecollection/newMovieView.fxml"));
             Scene scene = new Scene(loader.load());
 
             MovieEditController controller = loader.getController();
             controller.setModel(model);
-            controller.init();
+            controller.init("");
             controller.showCreateMode();
             showStage(event, "Add Movie", scene);
         } catch (Exception e) {
@@ -278,7 +278,7 @@ public class MainController {
 
         if(selectedMovie != null){
             FXMLLoader loader = new FXMLLoader();
-            Scene scene = setScene(loader, "/dk/easv/privatemoviecollection/movieGenreView.fxml");
+            Scene scene = setScene(loader, "/dk/easv/privatemoviecollection/movieEditGenreView.fxml");
 
             // Set this controller as a parent controller for the new controller
             MovieGenreController Controller = loader.getController();

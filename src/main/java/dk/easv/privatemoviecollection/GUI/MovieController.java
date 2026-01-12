@@ -72,7 +72,7 @@ public class MovieController {
     @FXML
     private void onEditMovie(ActionEvent actionEvent) {
         try{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/dk/easv/privatemoviecollection/movieEditView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/dk/easv/privatemoviecollection/newMovieView.fxml"));
             Scene scene = new Scene(loader.load());
 
             MovieEditController controller = loader.getController();

@@ -6,6 +6,7 @@ import dk.easv.privatemoviecollection.Be.Movie;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -13,7 +14,8 @@ import java.util.List;
 
 public class MovieEditController {
 
-    @FXML private ChoiceBox cbGenre;
+    @FXML private VBox checkListsLeft;
+    @FXML private VBox checkListsRight;
     @FXML private Label lblHeader;
     @FXML private TextField txtTitle;
     @FXML private TextField txtImdbRating;
@@ -25,15 +27,35 @@ public class MovieEditController {
     private Model model;
     private boolean createMode = true;
     private Movie currentMovie;
+    ArrayList<CheckBox> checkBoxes = new ArrayList<>();
     private Movie editingMovie;
 
     public MovieEditController() {
     }
 
-   public void init(){
-       List<String> genres = model.getGenreNames();
-       cbGenre.setItems(FXCollections.observableList(genres));
-   }
+    public void init(String genres) {
+        generateCheckboxes(genres);
+    }
+
+    private void generateCheckboxes(String genres) {
+        List<Genre> genreList = model.getGenres();
+        boolean left = true;
+        for(Genre genre : genreList){
+            CheckBox checkBox = new CheckBox(genre.getName());
+            checkBox.setId(String.valueOf(genre.getId()));
+            if(genres.contains(genre.getName())){
+                checkBox.setSelected(true);
+            }
+
+            if(left){
+                checkListsLeft.getChildren().add(checkBox);
+            } else {
+                checkListsRight.getChildren().add(checkBox);
+            }
+            left = !left;
+            checkBoxes.add(checkBox);
+        }
+    }
 
     public void showCreateMode() {
 
@@ -57,7 +79,8 @@ public class MovieEditController {
         this.currentMovie = movie;
 
         txtTitle.setText(movie.getName());
-        cbGenre.setValue(movie.getGenresString());
+
+        //cbGenre.setText(movie.getGenresString());
         txtImdbRating.setText(String.valueOf(movie.getImdbRating()));
         txtPersonalRating.setText(String.valueOf(movie.getPersonalRating()));
         txtFilePath.setText(movie.getFilePath());
@@ -70,11 +93,15 @@ public class MovieEditController {
 
         String title = txtTitle.getText().trim();
         List<Integer> genreIds = new ArrayList<>();
-        String genres = cbGenre.getValue().toString();
-        List<Genre> allGenres = model.getGenres();
-        for(Genre genre : allGenres) {
-            if(genre.getName().equals(genres)) {
-                genreIds.add(genre.getId());
+        String genreString = "";
+        for(CheckBox checkBox : checkBoxes){
+            if(checkBox.isSelected()){
+                genreIds.add(Integer.parseInt(checkBox.getId()));
+                if(genreString == ""){
+                    genreString = checkBox.getText();
+                } else {
+                    genreString += ", " + checkBox.getText();
+                }
             }
         }
 
