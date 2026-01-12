@@ -7,12 +7,11 @@ import dk.easv.privatemoviecollection.Be.Movie;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import java.sql.*;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Model {
-    MovieManager logic = new MovieManager();
+    MovieManager movieManager = new MovieManager();
     private Connection connection;
     ObservableList<Movie> observableList;
 
@@ -29,25 +28,25 @@ public class Model {
 
     public ObservableList<Movie> getMovies() {
         if (observableList == null) {
-            observableList = FXCollections.observableList(logic.getMovies());
+            observableList = FXCollections.observableList(movieManager.getMovies());
         }
         return observableList;
     }
 
     public Movie getMovieData(String movieTitle) {
-        return logic.getMovieData(movieTitle);
+        return movieManager.getMovieData(movieTitle);
     }
 
     public void updateMovieLastViewed(Movie movie) {
-        logic.updateMovieLastViewed(movie);
+        movieManager.updateMovieLastViewed(movie);
     }
 
     public void deleteMovie(Movie movie) {
-        logic.deleteMovie(movie);
+        movieManager.deleteMovie(movie);
     }
 
     public String getMovieTrailerString(Movie movie) {
-        return logic.getMovieTrailerString(movie);
+        return movieManager.getMovieTrailerString(movie);
     }
 
     public void createMovie(Movie movie) {
@@ -102,11 +101,11 @@ public class Model {
     }
 
     public List<Genre> getGenres() {
-        return logic.getGenres();
+        return movieManager.getGenres();
     }
 
     public void updateGenres(Movie movie, ArrayList<Genre> genres) {
-        Movie updatedMovie = logic.updateGenres(movie, genres);
+        Movie updatedMovie = movieManager.updateGenres(movie, genres);
         if (updatedMovie != null) {
             for (int i = 0; i < observableList.size(); i++) {
                 if (observableList.get(i).getId() == updatedMovie.getId()) {
@@ -117,4 +116,7 @@ public class Model {
         }
     }
 
+    public List<String> getGenreNames() {
+        return movieManager.getGenreNames();
+    }
 }

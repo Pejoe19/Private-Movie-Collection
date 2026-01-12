@@ -260,17 +260,16 @@ public class MainController {
 
     private void openMovieEditorCreate(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/dk/easv/privatemoviecollection/movieEditView.fxml")
-            );
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/dk/easv/privatemoviecollection/movieEditView.fxml"));
             Scene scene = new Scene(loader.load());
 
             MovieEditController controller = loader.getController();
-            controller.showCreateMode();
             controller.setModel(model);
+            controller.init();
+            controller.showCreateMode();
             showStage(event, "Add Movie", scene);
-        } catch (IOException e) {
-            displayError(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -292,21 +291,13 @@ public class MainController {
 
     private Scene setScene(FXMLLoader loader, String filePath) {
         // Loads the new fxml file
-
         loader.setLocation(getClass().getResource(filePath));
         Scene scene = null;
         try {
             scene = new Scene(loader.load());
-            MovieEditController controller = loader.getController();
-            controller.setModel(model);
 
-            Stage stage = new Stage();
-            stage.setTitle("Edit Movie");
-            stage.setScene(scene);
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+            displayError(e);
         }
         return scene;
     }

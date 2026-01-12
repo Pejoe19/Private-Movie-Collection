@@ -30,8 +30,8 @@ public class MovieEditController {
     public MovieEditController() {
     }
 
-    public void initialize() {
-       List<Genre> genres = model.getGenres();
+   public void init(){
+       List<String> genres = model.getGenreNames();
        cbGenre.setItems(FXCollections.observableList(genres));
    }
 

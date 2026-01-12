@@ -49,6 +49,15 @@ public class MovieManager {
         return genreData.getAllGenres();
     }
 
+    public List<String> getGenreNames() {
+        List<Genre> genres = genreData.getAllGenres();
+        List<String> genreNames = new ArrayList<>();
+        for (Genre genre : genres){
+            genreNames.add(genre.getName());
+        }
+        return genreNames;
+    }
+
     public Movie updateGenres(Movie movie, ArrayList<Genre> newGenres) {
         ArrayList<Genre> movieGenresBefore = genreData.getMovieGenres(movie);
         String genreString = "";
