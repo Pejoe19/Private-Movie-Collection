@@ -1,6 +1,9 @@
-package dk.easv.privatemoviecollection.DAL;
+package dk.easv.privatemoviecollection.DAL.API;
+
+import dk.easv.privatemoviecollection.BLL.MovieException;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -12,11 +15,13 @@ public class APIConnector {
     private static final String PROP_FILE = "config/api.properties";
     private static String tmdbApiKey;
 
-    public APIConnector() throws IOException {
+    public APIConnector() throws MovieException {
         Properties props = new Properties();
         try (FileInputStream fis = new FileInputStream(PROP_FILE)) {
             props.load(fis);
             tmdbApiKey = props.getProperty("TMDB_API_KEY");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

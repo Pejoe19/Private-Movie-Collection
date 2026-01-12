@@ -1,5 +1,6 @@
-package dk.easv.privatemoviecollection.DAL;
+package dk.easv.privatemoviecollection.DAL.DB;
 
+import dk.easv.privatemoviecollection.BLL.MovieException;
 import dk.easv.privatemoviecollection.Be.Movie;
 
 import java.io.IOException;
@@ -9,11 +10,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class MovieDAO {
+public class MovieDAO implements IMovieDataAccess {
     private final DBConnector dbConnector = new DBConnector();
 
-    public MovieDAO() throws IOException {
+    public MovieDAO() throws MovieException {
     }
+
 
     public List<Movie> getMovies() {
        List<Movie> movies = new ArrayList<>();
@@ -62,6 +64,16 @@ public class MovieDAO {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public Movie createMovie(Movie movie) {
+        return null;
+    }
+
+    @Override
+    public void updateMovie(Movie movie) {
+
     }
 
     public void deleteMovie(Movie movie) {

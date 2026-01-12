@@ -1,5 +1,6 @@
 package dk.easv.privatemoviecollection.GUI;
 
+import dk.easv.privatemoviecollection.BLL.MovieException;
 import dk.easv.privatemoviecollection.Be.Movie;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -36,7 +37,7 @@ public class MainController {
     Model model = new Model();
     Image defaultImage = new Image(getClass().getResourceAsStream("/dk/easv/privatemoviecollection/pictures/3d-cinema-popcorn-cup.jpg"));
 
-    public MainController() throws IOException {
+    public MainController() throws MovieException {
     }
 
     @FXML
@@ -114,6 +115,14 @@ public class MainController {
         });
     }
 
+    private void displayError(Throwable t)
+    {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Something went wrong");
+        alert.setHeaderText(t.getMessage());
+        alert.showAndWait();
+    }
+
     private void onShowDetails(ActionEvent actionEvent, Movie movie) {
         FXMLLoader loader = new FXMLLoader();
         Scene scene = setScene(loader, "/dk/easv/privatemoviecollection/movieView.fxml");
@@ -162,7 +171,7 @@ public class MainController {
             controller.showCreateMode();
             showStage(event, "Add Movie", scene);
         } catch (IOException e) {
-            e.printStackTrace();
+            displayError(e);
         }
     }
 
@@ -196,7 +205,7 @@ public class MainController {
         try {
             scene = new Scene(loader.load());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            displayError(e);
         }
         return scene;
     }

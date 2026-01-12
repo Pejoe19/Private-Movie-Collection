@@ -1,6 +1,7 @@
 package dk.easv.privatemoviecollection.GUI;
 
-import dk.easv.privatemoviecollection.BLL.Logic;
+import dk.easv.privatemoviecollection.BLL.MovieException;
+import dk.easv.privatemoviecollection.BLL.MovieManager;
 import dk.easv.privatemoviecollection.Be.Genre;
 import dk.easv.privatemoviecollection.Be.Movie;
 import javafx.collections.FXCollections;
@@ -11,10 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Model {
-    Logic logic = new Logic();
+    MovieManager logic = new MovieManager();
     ObservableList<Movie> observableList;
 
-    public Model() throws IOException {
+    public Model() throws MovieException {
     }
 
     public ObservableList<Movie> getMovies() {
