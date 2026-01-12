@@ -17,7 +17,7 @@
 <?import javafx.scene.web.WebView?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.easv.privatemoviecollection.GUI.MovieController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" stylesheets="@Style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.easv.privatemoviecollection.GUI.MovieController">
    <children>
       <GridPane hgap="10.0" prefHeight="216.0" prefWidth="474.0" vgap="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
@@ -35,7 +35,7 @@
         </rowConstraints>
          <children>
             <ImageView fx:id="imgViewMovie" fitHeight="262.0" fitWidth="147.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP" GridPane.vgrow="ALWAYS" />
-            <Text fx:id="txtTitle" fill="#616161" strokeType="OUTSIDE" strokeWidth="0.0" text="Title" wrappingWidth="363.2000153064728" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
+            <Text fx:id="txtTitle" fill="#616161" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="headerLabel" text="Title" wrappingWidth="363.2000153064728" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
                <font>
                   <Font name="System Bold" size="28.0" />
                </font>
@@ -91,15 +91,15 @@
                   <Insets top="10.0" />
                </padding>
             </ScrollPane>
-             <Button fx:id="btnPlay" contentDisplay="TOP" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#onBtnPlayMovie" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: gray; -fx-border-radius: 50; -fx-background-radius: 50;" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+             <Button fx:id="btnPlay" contentDisplay="TOP" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#onBtnPlayMovie" prefHeight="40.0" prefWidth="40.0" style="-fx-border-radius: 50; -fx-background-radius: 50;" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                <graphic>
                   <FontIcon iconColor="WHITE" iconLiteral="fas-play" />
                </graphic></Button>
-             <Button fx:id="btnBack" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#onExit" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 50; -fx-border-radius: 50; -fx-background-color: grey;" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+             <Button fx:id="btnBack" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#onExit" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 50; -fx-border-radius: 50;" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                <graphic>
                   <FontIcon iconColor="WHITE" iconLiteral="fas-arrow-left" />
                </graphic></Button>
-             <Button onAction="#onEditMovie" text="Edit" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+             <Button onAction="#onEditMovie" style="-fx-background-radius: 50; -fx-border-radius: 50;" text="Edit" GridPane.columnIndex="3" GridPane.rowIndex="1" />
          </children>
       </GridPane>
       <MediaView fx:id="mediaView" fitHeight="400.0" fitWidth="600.0" visible="false" />

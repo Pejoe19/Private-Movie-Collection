@@ -1,0 +1,31 @@
+.Search{
+    -fx-background-color: rgb(165, 85, 85);
+    -fx-text-fill: white;
+}
+
+.menu-button {
+    -fx-background-color: rgba(112, 56, 56);
+    -fx-text-fill: white;
+}
+
+.button {
+    -fx-background-color: rgba(112, 56, 56, 0.90);
+    -fx-text-fill: white;
+}
+
+.button:hover{
+    -fx-background-color: rgba(112, 56, 56);
+}
+
+.menu-button .label{
+    -fx-text-fill: white;
+}
+
+.table-row:focused, .table-row-cell:selected:focused{
+    -fx-background-color: rgba(112, 56, 56, 0.8);
+}
+
+.headerLabel {
+    -fx-text-fill: #753636;
+    -fx-fill: #753636;
+}

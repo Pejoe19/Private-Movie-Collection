@@ -7,15 +7,15 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.easv.privatemoviecollection.GUI.MovieGenreController">
+<VBox stylesheets="@Style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.easv.privatemoviecollection.GUI.MovieGenreController">
 
         <padding>
             <Insets bottom="20" left="20" right="20" top="20" />
         </padding>
 
-    <Label fx:id="lblHeader" text="Change genre for:">
+    <Label fx:id="lblHeader" style="-fx-text-fill: rgba(112, 56, 56);" text="Change genre for:">
         <font>
-            <Font size="22" />
+            <Font name="System Bold" size="22.0" />
         </font>
     </Label>
    <Label fx:id="lblMovieName">
@@ -37,7 +37,7 @@
    </HBox>
 
     <HBox spacing="10">
-        <Button onAction="#onSave" style="-fx-background-color: lightblue;" text="Save" />
+        <Button onAction="#onSave" text="Save" />
         <Button onAction="#onCancel" text="Cancel" />
     </HBox>
 

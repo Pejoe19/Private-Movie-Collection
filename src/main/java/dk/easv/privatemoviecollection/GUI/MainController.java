@@ -8,15 +8,19 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Paint;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.kordamp.ikonli.javafx.FontIcon;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 
+import java.awt.*;
 import java.io.IOException;
 import java.io.File;
 
@@ -48,7 +52,7 @@ public class MainController {
     private TextField TFSearchF;
 
     Model model = new Model();
-    Image defaultImage = new Image(getClass().getResourceAsStream("/dk/easv/privatemoviecollection/pictures/3d-cinema-popcorn-cup.jpg"));
+    Image defaultImage = new Image(getClass().getResourceAsStream("/dk/easv/privatemoviecollection/Default_Movie_Picture.jpg"));
     private FilteredList<Movie> filteredMovies;
 
     public MainController() throws MovieException {
@@ -189,6 +193,7 @@ public class MainController {
 
             {
                 FontIcon icon = new FontIcon("fas-arrow-right");
+                icon.setIconColor(Paint.valueOf("white"));
                 btnMore.setGraphic(icon);
 
                 btnMore.setOnAction(event -> {
