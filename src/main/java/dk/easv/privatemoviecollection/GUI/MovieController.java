@@ -76,6 +76,7 @@ public class MovieController {
             Scene scene = new Scene(loader.load());
 
             MovieEditController controller = loader.getController();
+            controller.setModel(model);
             controller.showEditMode(movie);
 
             Stage stage = new Stage();

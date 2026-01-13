@@ -38,20 +38,25 @@ public class MovieEditController {
     }
 
     private void generateCheckboxes(String genres) {
+        if (genres == null) genres = "";
+
         List<Genre> genreList = model.getGenres();
         boolean left = true;
-        for(Genre genre : genreList){
+
+        for (Genre genre : genreList) {
             CheckBox checkBox = new CheckBox(genre.getName());
             checkBox.setId(String.valueOf(genre.getId()));
-            if(genres.contains(genre.getName())){
+
+            if (genres.contains(genre.getName())) {
                 checkBox.setSelected(true);
             }
 
-            if(left){
+            if (left) {
                 checkListsLeft.getChildren().add(checkBox);
             } else {
                 checkListsRight.getChildren().add(checkBox);
             }
+
             left = !left;
             checkBoxes.add(checkBox);
         }
@@ -66,9 +71,20 @@ public class MovieEditController {
 
     public void showEditMode(Movie movie) {
         lblHeader.setText("Edit Movie");
-        editingMovie = movie;
         createMode = false;
+        editingMovie = movie;
         btnSave.setText("Save Changes");
+
+        this.currentMovie = movie;
+
+        // Fill text fields
+        txtTitle.setText(movie.getName());
+        txtImdbRating.setText(String.valueOf(movie.getImdbRating()));
+        txtPersonalRating.setText(String.valueOf(movie.getPersonalRating()));
+        txtFilePath.setText(movie.getFilePath());
+
+        // Generate genre checkboxes
+        generateCheckboxes(movie.getGenresString());
     }
 
     public void setModel(Model model) {
@@ -86,11 +102,8 @@ public class MovieEditController {
         txtFilePath.setText(movie.getFilePath());
     }
 
-
-
     @FXML
     private void onSave() {
-
         String title = txtTitle.getText().trim();
         List<Integer> genreIds = new ArrayList<>();
         String genreString = "";
@@ -104,7 +117,6 @@ public class MovieEditController {
                 }
             }
         }
-
         String filePath = txtFilePath.getText().trim();
         float imdbRating;
         float personalRating;
@@ -115,7 +127,6 @@ public class MovieEditController {
             new Alert(Alert.AlertType.ERROR, "Ratings must be numbers").showAndWait();
             return;
         }
-
         if (createMode) {
             Movie movie = new Movie(title, genreIds, imdbRating, personalRating, filePath);
             model.createMovie(movie);
@@ -127,11 +138,23 @@ public class MovieEditController {
             currentMovie.setFilePath(filePath);
 
             model.updateMovie(currentMovie);
-        }
 
+            model.updateGenres(currentMovie, buildGenreList());
+        }
         Stage stage = (Stage) btnSave.getScene().getWindow();
         stage.close();
     }
+
+    private ArrayList<Genre> buildGenreList() {
+        ArrayList<Genre> genres = new ArrayList<>();
+        for (CheckBox cb : checkBoxes) {
+            if (cb.isSelected()) {
+                genres.add(new Genre(Integer.parseInt(cb.getId()), cb.getText()));
+            }
+        }
+        return genres;
+    }
+
     @FXML
     private void onCancel() {
         Stage stage = (Stage) btnCancel.getScene().getWindow();

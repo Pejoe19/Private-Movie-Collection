@@ -73,12 +73,26 @@ public class MovieDAO implements IMovieDataAccess {
 
     @Override
     public void updateMovie(Movie movie) {
+        String sql = "UPDATE dbo.Movie SET Name = ?, ImdbRating = ?, PersonalRating = ?, FileLink = ? WHERE Id = ?";
 
+        try (Connection conn = DBConnector.getStaticConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, movie.getName());
+            stmt.setFloat(2, movie.getImdbRating());
+            stmt.setFloat(3, movie.getPersonalRating());
+            stmt.setString(4, movie.getFilePath());
+            stmt.setInt(5, movie.getId());
+            stmt.executeUpdate();
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void deleteMovie(Movie movie) {
-        String deleteRelations = "DELETE FROM CatMovie WHERE MovieId = ?";
-        String deleteMovie = "DELETE FROM Movies WHERE Id = ?";
+        String deleteRelations = "DELETE FROM dbo.CatMovie WHERE MovieId = ?";
+        String deleteMovie = "DELETE FROM dbo.Movie WHERE Id = ?";
 
         try (Connection conn = dbConnector.getConnection()) {
 

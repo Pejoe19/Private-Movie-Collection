@@ -4,6 +4,7 @@ import dk.easv.privatemoviecollection.BLL.MovieException;
 import dk.easv.privatemoviecollection.BLL.MovieManager;
 import dk.easv.privatemoviecollection.Be.Genre;
 import dk.easv.privatemoviecollection.Be.Movie;
+import dk.easv.privatemoviecollection.DAL.DB.DBConnector;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import java.sql.*;
@@ -76,27 +77,14 @@ public class Model {
     }
 
     public void updateMovie(Movie movie) {
-        try {
-            String sql = "UPDATE movies SET title = ?, imdbRating = ?, personalRating = ?, filePath = ? WHERE id = ?";
-            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-                stmt.setString(1, movie.getName());
-                stmt.setFloat(2, movie.getImdbRating());
-                stmt.setFloat(3, movie.getPersonalRating());
-                stmt.setString(4, movie.getFilePath());
-                stmt.setInt(5, movie.getId());
-                stmt.executeUpdate();
-            }
+        movieManager.updateMovie(movie); // DB update
 
-            ObservableList<Movie> movies = getMovies();
-            for (int i = 0; i < movies.size(); i++) {
-                if (movies.get(i).getId() == movie.getId()) {
-                    movies.set(i, movie);
-                    break;
-                }
+        // Update the list in memory
+        for (int i = 0; i < observableList.size(); i++) {
+            if (observableList.get(i).getId() == movie.getId()) {
+                observableList.set(i, movie);
+                break;
             }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 

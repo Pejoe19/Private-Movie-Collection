@@ -82,4 +82,8 @@ public class MovieManager {
         movie.setGenresString(genreString);
         return movie;
     }
+
+    public void updateMovie(Movie movie) {
+        movieData.updateMovie(movie);
+    }
 }
