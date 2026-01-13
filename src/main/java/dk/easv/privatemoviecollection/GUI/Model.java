@@ -63,8 +63,19 @@ public class Model {
     }
 
     public void updateGenres(Movie movie, ArrayList<Genre> genres) {
+
         Movie updatedMovie = movieManager.updateGenres(movie, genres);
+
         if (updatedMovie != null) {
+            // Build string for GUI table
+            String genreString = genres.stream()
+                    .map(Genre::getName)
+                    .reduce((a, b) -> a + ", " + b)
+                    .orElse("");
+
+            updatedMovie.setGenresString(genreString);
+
+            // Update observable list
             for (int i = 0; i < observableList.size(); i++) {
                 if (observableList.get(i).getId() == updatedMovie.getId()) {
                     observableList.set(i, updatedMovie);
@@ -76,5 +87,9 @@ public class Model {
 
     public List<String> getGenreNames() {
         return movieManager.getGenreNames();
+    }
+
+    public ArrayList<Genre> getMovieGenres(Movie movie) {
+        return movieManager.getMovieGenres(movie);
     }
 }

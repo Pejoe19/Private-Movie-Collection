@@ -38,26 +38,27 @@ public class MovieGenreController {
     public void init(Movie movie) {
         this.movie = movie;
         lblMovieName.setText(movie.getName());
-        generateCheckboxes(movie.getGenresString());
+        ArrayList<Genre> movieGenres = model.getMovieGenres(movie);
+        generateCheckboxes(movieGenres);
     }
 
-    private void generateCheckboxes(String genres) {
-        genreList = model.getGenres();
+    private void generateCheckboxes(ArrayList<Genre> movieGenres) {
+        List<Genre> allGenres = model.getGenres();
         boolean left = true;
-        for(Genre genre : genreList){
-            CheckBox checkBox = new CheckBox(genre.getName());
-            checkBox.setId(String.valueOf(genre.getId()));
-            if(genres.contains(genre.getName())){
-                checkBox.setSelected(true);
+
+        for (Genre genre : allGenres) {
+            CheckBox cb = new CheckBox(genre.getName());
+            cb.setId(String.valueOf(genre.getId()));
+
+            if (movieGenres.stream().anyMatch(g -> g.getId() == genre.getId())) {
+                cb.setSelected(true);
             }
 
-            if(left){
-                checkListContainerLeft.getChildren().add(checkBox);
-            } else {
-                checkListContainerRight.getChildren().add(checkBox);
-            }
+            if (left) checkListContainerLeft.getChildren().add(cb);
+            else checkListContainerRight.getChildren().add(cb);
+
             left = !left;
-            checkBoxes.add(checkBox);
+            checkBoxes.add(cb);
         }
     }
 

@@ -87,6 +87,10 @@ public class MovieManager {
         return movie;
     }
 
+    public ArrayList<Genre> getMovieGenres(Movie movie) {
+        return genreData.getMovieGenres(movie);
+    }
+
     public void updateMovie(Movie movie) {
         movieData.updateMovie(movie);
     }

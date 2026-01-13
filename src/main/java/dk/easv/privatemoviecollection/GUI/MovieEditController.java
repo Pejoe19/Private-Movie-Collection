@@ -33,32 +33,25 @@ public class MovieEditController {
     public MovieEditController() {
     }
 
-    public void init(String genres) {
-        generateCheckboxes(genres);
-    }
+    public void init(String genres) {generateCheckboxes(new ArrayList<>());}
 
-    private void generateCheckboxes(String genres) {
-        if (genres == null) genres = "";
-
-        List<Genre> genreList = model.getGenres();
+    private void generateCheckboxes(ArrayList<Genre> movieGenres) {
+        List<Genre> allGenres = model.getGenres();
         boolean left = true;
 
-        for (Genre genre : genreList) {
-            CheckBox checkBox = new CheckBox(genre.getName());
-            checkBox.setId(String.valueOf(genre.getId()));
+        for (Genre genre : allGenres) {
+            CheckBox cb = new CheckBox(genre.getName());
+            cb.setId(String.valueOf(genre.getId()));
 
-            if (genres.contains(genre.getName())) {
-                checkBox.setSelected(true);
+            if (movieGenres.stream().anyMatch(g -> g.getId() == genre.getId())) {
+                cb.setSelected(true);
             }
 
-            if (left) {
-                checkListsLeft.getChildren().add(checkBox);
-            } else {
-                checkListsRight.getChildren().add(checkBox);
-            }
+            if (left) checkListsLeft.getChildren().add(cb);
+            else checkListsRight.getChildren().add(cb);
 
             left = !left;
-            checkBoxes.add(checkBox);
+            checkBoxes.add(cb);
         }
     }
 
@@ -83,8 +76,8 @@ public class MovieEditController {
         txtPersonalRating.setText(String.valueOf(movie.getPersonalRating()));
         txtFilePath.setText(movie.getFilePath());
 
-        // Generate genre checkboxes
-        generateCheckboxes(movie.getGenresString());
+        ArrayList<Genre> movieGenres = model.getMovieGenres(movie);
+        generateCheckboxes(movieGenres);
     }
 
     public void setModel(Model model) {
@@ -134,14 +127,20 @@ public class MovieEditController {
             model.createMovie(movie);
         } else {
             currentMovie.setName(title);
-            currentMovie.setGenres(genreIds);
             currentMovie.setImdbRating(imdbRating);
             currentMovie.setPersonalRating(personalRating);
             currentMovie.setFilePath(filePath);
 
+            // Update movie info in DB
             model.updateMovie(currentMovie);
 
-            model.updateGenres(currentMovie, buildGenreList());
+            // Compare genres
+            ArrayList<Genre> newGenres = buildGenreList();
+            ArrayList<Genre> oldGenres = model.getMovieGenres(currentMovie);
+
+            if (!newGenres.equals(oldGenres)) {
+                model.updateGenres(currentMovie, newGenres);
+            }
         }
         Stage stage = (Stage) btnSave.getScene().getWindow();
         stage.close();
