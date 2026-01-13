@@ -110,4 +110,27 @@ public class MovieDAO implements IMovieDataAccess {
             throw new RuntimeException(e);
         }
     }
+
+    public void addMovie(Movie movie) {
+        String sql = "INSERT INTO movie (Name, ImdbRating, PersonalRating, FileLink) VALUES (?, ?, ?, ?)";
+        try(Connection conn = DBConnector.getStaticConnection()) {
+            PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+            stmt.setString(1, movie.getName());
+            stmt.setFloat(2, movie.getImdbRating());
+            stmt.setFloat(3, movie.getPersonalRating());
+            stmt.setString(4, movie.getFilePath());
+            stmt.executeUpdate();
+
+            try (ResultSet keys = stmt.getGeneratedKeys()) {
+                if (keys.next()) {
+                    movie.setId(keys.getInt(1));
+                }
+            }
+        } catch (MovieException | SQLException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

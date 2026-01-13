@@ -2,6 +2,7 @@ package dk.easv.privatemoviecollection.GUI;
 
 import dk.easv.privatemoviecollection.BLL.MovieException;
 import dk.easv.privatemoviecollection.Be.Movie;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,6 +24,9 @@ import javafx.collections.transformation.SortedList;
 import java.awt.*;
 import java.io.IOException;
 import java.io.File;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 
 public class MainController {
@@ -51,29 +55,79 @@ public class MainController {
     @FXML
     private TextField TFSearchF;
 
-    Model model = new Model();
-    Image defaultImage = new Image(getClass().getResourceAsStream("/dk/easv/privatemoviecollection/Default_Movie_Picture.jpg"));
+    private Model model = new Model();
+    private Image defaultImage = new Image(getClass().getResourceAsStream("/dk/easv/privatemoviecollection/Default_Movie_Picture.jpg"));
     private FilteredList<Movie> filteredMovies;
+    private ObservableList<Movie> movies;
 
+    /**
+     * Construtor for Main Controller.
+     * @throws MovieException
+     */
     public MainController() throws MovieException {
     }
 
+    /**
+     * Initialize method. Runs when everything is created and SceneBuilder has been loaded.
+     */
     @FXML
     public void initialize() {
         setupTable();
 
+        movies = model.getMovies();
         filteredMovies = new FilteredList<>(
-                model.getMovies(),
+                movies,
                 movie -> true
         );
+
         SortedList<Movie> sortedMovies = new SortedList<>(filteredMovies);
         sortedMovies.comparatorProperty().bind(tblView.comparatorProperty());
 
         tblView.setItems(sortedMovies);
-
         setupFiltering();
     }
 
+    public void init(Scene scene) {
+        ObservableList<Movie> movies = model.getMovies();
+        scene.getWindow().setOnShown(event -> checkForDelete(movies));
+    }
+
+    private void checkForDelete(ObservableList<Movie> movies) {
+        LocalDate dateTwoYearsAgo = LocalDate.now().minusYears(2);
+        for(Movie movie : movies){
+            boolean deleted = false;
+            if(movie.getLastViewed() != null){
+                LocalDate movieLastViewed = LocalDate.parse(movie.getLastViewed().toString());
+                if(movieLastViewed.isBefore(dateTwoYearsAgo)){
+                    deleted = askToDeleteMovie("date", movie);
+                    if(deleted)
+                        return;
+                }
+            }
+
+            if(movie.getPersonalRating() != 0){
+                if(movie.getPersonalRating() < 6){
+                    deleted = askToDeleteMovie("rating", movie);
+                    if(deleted)
+                        return;
+                }
+            }
+        }
+    }
+
+    private boolean askToDeleteMovie(String reason, Movie movie) {
+        boolean deleted = false;
+        if(reason.equals("date")){
+            deleted = showDeleteConfirmation(movie, movie.getName() + " has not been seen in two years. Do you want to delete it from your collection?");
+        } else if (reason.equals("rating")) {
+            deleted = showDeleteConfirmation(movie, movie.getName() + " has a personal ration under 6. Do you want to delete it from your collection?");
+        }
+        return deleted;
+    }
+
+    /**
+     * Setup listeners for filtering
+     */
     private void setupFiltering() {
         TFSearchF.textProperty().addListener((observable, oldValue, newValue) -> applyFilters());
         CBTitle.selectedProperty().addListener((obs, o, n) -> applyFilters());
@@ -88,7 +142,7 @@ public class MainController {
 
         filteredMovies.setPredicate(movie -> {
 
-            // Hvis ingen filtre er valgt → vis alle
+            // If no filters are chosen -> show all
             if (!CBTitle.isSelected() &&
                     !CBCategory.isSelected() &&
                     !CBMIMDbRating.isSelected() &&
@@ -217,19 +271,27 @@ public class MainController {
         });
     }
 
-    private void displayError(Throwable t)
+    /**
+     * Methods for displaying the exception error message
+     * @param throwable
+     */
+    private void displayError(Throwable throwable)
     {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Something went wrong");
-        alert.setHeaderText(t.getMessage());
+        alert.setHeaderText(throwable.getMessage());
         alert.showAndWait();
     }
 
+    /**
+     * Open the details window for the param movie
+     * @param actionEvent
+     * @param movie
+     */
     private void onShowDetails(ActionEvent actionEvent, Movie movie) {
         FXMLLoader loader = new FXMLLoader();
         Scene scene = setScene(loader, "/dk/easv/privatemoviecollection/movieView.fxml");
 
-        // Set this controller as a parent controller for the new controller
         MovieController movieController = loader.getController();
         movieController.setModel(model);
         movieController.init(movie);
@@ -237,17 +299,20 @@ public class MainController {
         showStage(actionEvent, "MovieDetails", scene);
     }
 
-    private void showDeleteConfirmation(Movie movie) {
+    private boolean showDeleteConfirmation(Movie movie, String question) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Delete Movie");
-        alert.setHeaderText("Are you sure?");
+        alert.setTitle(question);
+        alert.setHeaderText(question);
+        boolean deleted = false;
         alert.setContentText(
                 "The movie \"" + movie.getName() + "\" will be deleted from the collection."
         );
 
         if (alert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
             deleteMovie(movie);
+            deleted = true;
         }
+        return deleted;
     }
 
     @FXML
@@ -259,7 +324,7 @@ public class MainController {
     private void onDeleteMovie(){
         Movie selectedMovie = tblView.getSelectionModel().getSelectedItem();
         if(selectedMovie != null){
-            showDeleteConfirmation(selectedMovie);
+            showDeleteConfirmation(selectedMovie, "Are you sure?");
         }
     };
 

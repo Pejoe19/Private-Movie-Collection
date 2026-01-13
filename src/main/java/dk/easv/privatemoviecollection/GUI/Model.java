@@ -13,18 +13,9 @@ import java.util.List;
 
 public class Model {
     MovieManager movieManager = new MovieManager();
-    private Connection connection;
     ObservableList<Movie> observableList;
 
     public Model() throws MovieException {
-//        try {
-//            String url = "jdbc:mysql://localhost:3306/privatemovie_collection";
-//            String user = "root";
-//            String password = "root";
-//            connection = DriverManager.getConnection(url, user, password);
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
     }
 
     public ObservableList<Movie> getMovies() {
@@ -52,28 +43,7 @@ public class Model {
 
     public void createMovie(Movie movie) {
         getMovies().add(movie);
-        try {
-            addMovieToDatabase(movie);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void addMovieToDatabase(Movie movie) throws SQLException {
-        String sql = "INSERT INTO movies (title, imdbRating, personalRating, filePath) VALUES (?, ?, ?, ?)";
-        try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            stmt.setString(1, movie.getName());
-            stmt.setFloat(2, movie.getImdbRating());
-            stmt.setFloat(3, movie.getPersonalRating());
-            stmt.setString(4, movie.getFilePath());
-            stmt.executeUpdate();
-
-            try (ResultSet keys = stmt.getGeneratedKeys()) {
-                if (keys.next()) {
-                    movie.setId(keys.getInt(1));
-                }
-            }
-        }
+        movieManager.addMovieToDatabase(movie);
     }
 
     public void updateMovie(Movie movie) {

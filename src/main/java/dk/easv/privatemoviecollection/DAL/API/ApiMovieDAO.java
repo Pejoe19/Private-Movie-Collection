@@ -24,27 +24,33 @@ public class ApiMovieDAO {
 
         ObjectMapper mapper = new ObjectMapper();
         try {
-            Map<String,Object> map = mapper.readValue(movieDataJson, Map.class);
-            List<Map<String,Object>> movies = (List<Map<String, Object>>) map.get("results");
-            Map<String,Object> firstMovie = movies.getFirst();
+            Map<String, Object> map = mapper.readValue(movieDataJson, Map.class);
+            List<Map<String, Object>> movies = (List<Map<String, Object>>) map.get("results");
+            System.out.println(movies);
+            if (!movies.isEmpty()) {
+                Map<String, Object> firstMovie = movies.getFirst();
 
-            String movieName = (String) firstMovie.get("original_title");
-            String movieOverview = (String) firstMovie.get("overview");
-            String trailerApiKey = getTrailerKey(String.valueOf(firstMovie.get("id")));
-            ArrayList<Integer> movieGenreIdList = (ArrayList<Integer>) firstMovie.get("genre_ids");
-            String movieImagePath = (String) firstMovie.get("poster_path");
+                System.out.println(firstMovie.get("image"));
+                if (firstMovie.get("image") != null) {
+                    String movieName = (String) firstMovie.get("original_title");
+                    String movieOverview = (String) firstMovie.get("overview");
+                    String trailerApiKey = getTrailerKey(String.valueOf(firstMovie.get("id")));
+                    ArrayList<Integer> movieGenreIdList = (ArrayList<Integer>) firstMovie.get("genre_ids");
+                    String movieImagePath = (String) firstMovie.get("poster_path");
 
-            return new Movie(movieName, movieGenreIdList, movieOverview, movieImagePath, trailerApiKey);
-
-        } catch (JsonProcessingException e) {
+                    return new Movie(movieName, movieGenreIdList, movieOverview, movieImagePath, trailerApiKey);
+                }
+            }
+        } catch(JsonProcessingException e){
             throw new RuntimeException(e);
-        } catch (IOException e) {
+        } catch(IOException e){
             throw new RuntimeException(e);
         }
+        return null;
     }
 
     private String getTrailerKey(String id) {
-        String videoDataJson = apiConnector.getJsonFromApi("https://api.themoviedb.org/3/movie/" + id + "/videos?api_key=");
+         String videoDataJson = apiConnector.getJsonFromApi("https://api.themoviedb.org/3/movie/" + id + "/videos?api_key=");
 
         ObjectMapper mapper = new ObjectMapper();
         try {

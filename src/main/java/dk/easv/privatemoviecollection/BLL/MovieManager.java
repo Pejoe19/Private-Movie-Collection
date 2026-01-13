@@ -21,6 +21,10 @@ public class MovieManager {
     public MovieManager() throws MovieException {
     }
 
+    public void addMovieToDatabase(Movie movie) {
+        movieData.addMovie(movie);
+    }
+
     public void deleteMovie(Movie movie) {
         movieData.deleteMovie(movie);
     }

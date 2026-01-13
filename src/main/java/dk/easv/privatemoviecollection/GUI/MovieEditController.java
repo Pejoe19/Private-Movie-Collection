@@ -129,6 +129,8 @@ public class MovieEditController {
         }
         if (createMode) {
             Movie movie = new Movie(title, genreIds, imdbRating, personalRating, filePath);
+            movie.setGenresString(genreString);
+            System.out.println(movie.toString());
             model.createMovie(movie);
         } else {
             currentMovie.setName(title);
