@@ -196,7 +196,7 @@ public class MainController {
     }
 
     private void setupTable() {
-        tblColImage.setCellValueFactory(new PropertyValueFactory<>("filePath"));
+        tblColImage.setCellValueFactory(new PropertyValueFactory<>("pictureFilePath"));
         tblColName.setCellValueFactory(new PropertyValueFactory<>("name"));
         tblColGenre.setCellValueFactory(new PropertyValueFactory<>("genresString"));
         tblColIMDbRating.setCellValueFactory(new PropertyValueFactory<>("imdbRating"));

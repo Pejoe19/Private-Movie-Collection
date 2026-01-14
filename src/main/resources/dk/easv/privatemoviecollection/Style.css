@@ -29,3 +29,7 @@
     -fx-text-fill: #753636;
     -fx-fill: #753636;
 }
+
+.menu-button .menu-item .label {
+    -fx-text-fill: black;
+}

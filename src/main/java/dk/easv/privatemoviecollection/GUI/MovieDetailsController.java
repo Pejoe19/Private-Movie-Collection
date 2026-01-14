@@ -12,6 +12,8 @@ import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 
 public class MovieDetailsController {
@@ -56,11 +58,19 @@ public class MovieDetailsController {
     }
 
     public void onBtnPlayMovie(ActionEvent actionEvent) {
-        webView.setVisible(true);
+        if(movie.getMovieFilePath() != null){
+            File movieFile = new File(movie.getMovieFilePath());
+            try {
+                Desktop.getDesktop().open(movieFile);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
-        String key = model.getMovieTrailerString(movie);
-        String youtubeUrl = "https://www.youtube.com/embed/" + key;
-        webView.getEngine().load(youtubeUrl);
+//        webView.setVisible(true);
+//        String key = model.getMovieTrailerString(movie);
+//        String youtubeUrl = "https://www.youtube.com/embed/" + key;
+//        webView.getEngine().load(youtubeUrl);
 
         model.updateMovieLastViewed(movie);
     }

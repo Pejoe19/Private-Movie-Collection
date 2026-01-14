@@ -15,7 +15,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox fx:id="VBox" prefHeight="593.0" prefWidth="364.0" spacing="15" stylesheets="@Style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.easv.privatemoviecollection.GUI.MovieEditController">
+<VBox fx:id="VBox" prefHeight="626.0" prefWidth="364.0" spacing="15" stylesheets="@Style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dk.easv.privatemoviecollection.GUI.MovieEditController">
 
         <padding>
             <Insets bottom="20" left="20" right="20" top="20" />
@@ -27,7 +27,7 @@
         </font>
     </Label>
 
-    <GridPane fx:id="GridPane" hgap="10" prefHeight="454.0" prefWidth="324.0" vgap="10">
+    <GridPane fx:id="GridPane" hgap="10" prefHeight="490.0" prefWidth="324.0" vgap="10">
         <Label fx:id="LTitle" text="Title:" GridPane.rowIndex="0" GridPane.valignment="TOP">
          <GridPane.margin>
             <Insets top="4.0" />
@@ -67,8 +67,10 @@
         <Label fx:id="LPersonalRating" text="Personal Rating:" GridPane.rowIndex="3" />
         <TextField fx:id="txtPersonalRating" prefHeight="25.0" prefWidth="500.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
-        <Label fx:id="LFilePath" text="File Path:" GridPane.rowIndex="4" />
-        <TextField fx:id="txtFilePath" prefHeight="25.0" prefWidth="500.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+        <Label text="Picture file path:" GridPane.rowIndex="4" />
+        <TextField fx:id="txtPictureFilePath" prefHeight="25.0" prefWidth="500.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+      <Label text="Movie file path:" GridPane.rowIndex="5" />
+      <TextField fx:id="txtMovieFilePath" prefHeight="25.0" prefWidth="500.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
       <columnConstraints>
          <ColumnConstraints maxWidth="103.19998321533203" minWidth="83.2" prefWidth="100.40001983642578" />
          <ColumnConstraints maxWidth="230.0" minWidth="182.40001678466797" prefWidth="213.1999801635742" />
@@ -78,6 +80,7 @@
          <RowConstraints maxHeight="400.0" minHeight="31.19998779296877" prefHeight="400.0" />
          <RowConstraints maxHeight="45.600012207031256" minHeight="30.0" prefHeight="30.0" />
          <RowConstraints maxHeight="36.800012207031244" minHeight="30.0" prefHeight="30.0" />
+         <RowConstraints maxHeight="33.19998779296873" minHeight="30.0" prefHeight="30.0" />
          <RowConstraints maxHeight="33.19998779296873" minHeight="30.0" prefHeight="30.0" />
       </rowConstraints>
     </GridPane>

@@ -1,9 +1,7 @@
 package dk.easv.privatemoviecollection.GUI;
 
-import dk.easv.privatemoviecollection.BLL.MovieManager;
 import dk.easv.privatemoviecollection.Be.Genre;
 import dk.easv.privatemoviecollection.Be.Movie;
-import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -27,7 +25,8 @@ public class MovieEditController {
     @FXML private TextField txtTitle;
     @FXML private TextField txtImdbRating;
     @FXML private TextField txtPersonalRating;
-    @FXML private TextField txtFilePath;
+    @FXML private TextField txtPictureFilePath;
+    @FXML private TextField txtMovieFilePath;
     @FXML private Button btnSave;
     @FXML private Button btnCancel;
 
@@ -75,10 +74,10 @@ public class MovieEditController {
         String titleText = titleString.toLowerCase().trim();
         Movie movieFound = model.getMovieData(titleText);
         if(movieFound != null){
-            if(movieFound.getFilePath() != null){
+            if(movieFound.getPictureFilePath() != null){
                 this.movieFound = movieFound;
                 hBoxMovieFound.setVisible(true);
-                ivMovie.setImage(new Image(movieFound.getFilePath(),true));
+                ivMovie.setImage(new Image(movieFound.getPictureFilePath(),true));
                 txtMovieApiTitle.setText(movieFound.getName());
             }
         } else {
@@ -96,7 +95,7 @@ public class MovieEditController {
                 }
             }
         }
-        txtFilePath.setText(movieFound.getFilePath());
+        txtPictureFilePath.setText(movieFound.getPictureFilePath());
     }
 
     public void showCreateMode() {
@@ -118,7 +117,8 @@ public class MovieEditController {
         txtTitle.setText(movie.getName());
         txtImdbRating.setText(String.valueOf(movie.getImdbRating()));
         txtPersonalRating.setText(String.valueOf(movie.getPersonalRating()));
-        txtFilePath.setText(movie.getFilePath());
+        txtPictureFilePath.setText(movie.getPictureFilePath());
+        txtMovieFilePath.setText(movie.getMovieFilePath());
 
         ArrayList<Genre> movieGenres = model.getMovieGenres(movie);
         generateCheckboxes(movieGenres);
@@ -134,7 +134,8 @@ public class MovieEditController {
         txtTitle.setText(movie.getName());
         txtImdbRating.setText(String.valueOf(movie.getImdbRating()));
         txtPersonalRating.setText(String.valueOf(movie.getPersonalRating()));
-        txtFilePath.setText(movie.getFilePath());
+        txtPictureFilePath.setText(movie.getPictureFilePath());
+        txtMovieFilePath.setText(movie.getMovieFilePath());
     }
 
     @FXML
@@ -152,7 +153,9 @@ public class MovieEditController {
                 }
             }
         }
-        String filePath = txtFilePath.getText().trim();
+        String pictureFilePath = txtPictureFilePath.getText().trim();
+        String movieFilePath = txtMovieFilePath.getText().trim();
+
         float imdbRating;
         float personalRating;
         try {
@@ -162,34 +165,40 @@ public class MovieEditController {
             new Alert(Alert.AlertType.ERROR, "Ratings must be numbers").showAndWait();
             return;
         }
-        if (createMode) {
-            Movie movie;
-            if (movieFound != null){
-                movie = movieFound;
+        if(movieFilePath.contains(".mp4") || movieFilePath.contains(".mpeg4")){
+            if (createMode) {
+                Movie movie;
+                if (movieFound != null){
+                    movie = movieFound;
+                } else {
+                    movie = new Movie(title, genreIds, imdbRating, personalRating, pictureFilePath, movieFilePath);
+                }
+                movie.setGenres(genreIds);
+                movie.setGenresString(genreString);
+                movie.setImdbRating(Float.parseFloat(txtImdbRating.getText()));
+                movie.setPersonalRating(Float.parseFloat(txtPersonalRating.getText()));
+                model.createMovie(movie);
             } else {
-                movie = new Movie(title, genreIds, imdbRating, personalRating, filePath);
+                currentMovie.setName(title);
+                currentMovie.setImdbRating(imdbRating);
+                currentMovie.setPersonalRating(personalRating);
+                currentMovie.setPictureFilePath(pictureFilePath);
+                currentMovie.setMovieFilePath(movieFilePath);
+
+                // Update movie info in DB
+                model.updateMovie(currentMovie);
+
+                // Compare genres
+                ArrayList<Genre> newGenres = buildGenreList();
+                ArrayList<Genre> oldGenres = model.getMovieGenres(currentMovie);
+
+                if (!newGenres.equals(oldGenres)) {
+                    model.updateGenres(currentMovie, newGenres);
+                }
             }
-            movie.setGenres(genreIds);
-            movie.setGenresString(genreString);
-            movie.setImdbRating(Float.parseFloat(txtImdbRating.getText()));
-            movie.setPersonalRating(Float.parseFloat(txtPersonalRating.getText()));
-            model.createMovie(movie);
-        } else {
-            currentMovie.setName(title);
-            currentMovie.setImdbRating(imdbRating);
-            currentMovie.setPersonalRating(personalRating);
-            currentMovie.setFilePath(filePath);
-
-            // Update movie info in DB
-            model.updateMovie(currentMovie);
-
-            // Compare genres
-            ArrayList<Genre> newGenres = buildGenreList();
-            ArrayList<Genre> oldGenres = model.getMovieGenres(currentMovie);
-
-            if (!newGenres.equals(oldGenres)) {
-                model.updateGenres(currentMovie, newGenres);
-            }
+        }  else {
+            new Alert(Alert.AlertType.ERROR, "add a movie by adding a mp4 or mpeg4 file path").showAndWait();
+            return;
         }
         Stage stage = (Stage) btnSave.getScene().getWindow();
         stage.close();

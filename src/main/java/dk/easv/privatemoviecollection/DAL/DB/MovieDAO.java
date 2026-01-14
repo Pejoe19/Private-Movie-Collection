@@ -3,7 +3,6 @@ package dk.easv.privatemoviecollection.DAL.DB;
 import dk.easv.privatemoviecollection.BLL.MovieException;
 import dk.easv.privatemoviecollection.Be.Movie;
 
-import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -23,10 +22,10 @@ public class MovieDAO implements IMovieDataAccess {
         try (Connection conn = dbConnector.getConnection();
              Statement stmt = conn.createStatement()) {
 
-            String sql = "Select Movie.Id, Movie.Name, STRING_AGG(C.Name, ', ') AS Genres, Movie.ImdbRating AS \"IMDB Rating\", Movie.PersonalRating AS \"Personal Rating\", Movie.FileLink, Movie.LastView from Vores_Gruppe_Private_Movie_Collection.dbo.Movie\n" +
+            String sql = "Select Movie.Id, Movie.Name, STRING_AGG(C.Name, ', ') AS Genres, Movie.ImdbRating AS \"IMDB Rating\", Movie.PersonalRating AS \"Personal Rating\", Movie.PictureFilePath, Movie.MovieFilePath, Movie.LastView from Vores_Gruppe_Private_Movie_Collection.dbo.Movie\n" +
                     "LEFT JOIN dbo.CatMovie CM on Movie.Id = CM.MovieId\n" +
                     "LEFT JOIN dbo.Genre C on C.Id = CM.GenreId\n" +
-                    "group by Movie.Id, Movie.Name, Movie.ImdbRating, Movie.PersonalRating, Movie.FileLink, Movie.LastView";
+                    "group by Movie.Id, Movie.Name, Movie.ImdbRating, Movie.PersonalRating, Movie.PictureFilePath, Movie.MovieFilePath, Movie.LastView";
             ResultSet rs = stmt.executeQuery(sql);
 
             while (rs.next()) {
@@ -35,10 +34,11 @@ public class MovieDAO implements IMovieDataAccess {
                 String genre = rs.getString("Genres");
                 float imdbRating = rs.getFloat("Imdb Rating");
                 float personalRating = rs.getFloat("Personal Rating");
-                String filePath = rs.getString("FileLink");
+                String pictureFilePath = rs.getString("PictureFilePath");
+                String movieFilePath = rs.getString("MovieFilePath");
                 Date lastViewed = rs.getDate("LastView");
 
-                movies.add(new Movie(id, name, genre, imdbRating, personalRating, filePath, lastViewed));
+                movies.add(new Movie(id, name, genre, imdbRating, personalRating, pictureFilePath, movieFilePath, lastViewed));
             }
 
         } catch (Exception e) {
@@ -73,7 +73,7 @@ public class MovieDAO implements IMovieDataAccess {
 
     @Override
     public void updateMovie(Movie movie) {
-        String sql = "UPDATE dbo.Movie SET Name = ?, ImdbRating = ?, PersonalRating = ?, FileLink = ? WHERE Id = ?";
+        String sql = "UPDATE dbo.Movie SET Name = ?, ImdbRating = ?, PersonalRating = ?, PictureFilePath = ? WHERE Id = ?";
 
         try (Connection conn = DBConnector.getStaticConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -81,7 +81,7 @@ public class MovieDAO implements IMovieDataAccess {
             stmt.setString(1, movie.getName());
             stmt.setFloat(2, movie.getImdbRating());
             stmt.setFloat(3, movie.getPersonalRating());
-            stmt.setString(4, movie.getFilePath());
+            stmt.setString(4, movie.getPictureFilePath());
             stmt.setInt(5, movie.getId());
             stmt.executeUpdate();
 
@@ -112,14 +112,14 @@ public class MovieDAO implements IMovieDataAccess {
     }
 
     public void addMovie(Movie movie) {
-        String sql = "INSERT INTO movie (Name, ImdbRating, PersonalRating, FileLink) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO movie (Name, ImdbRating, PersonalRating, PictureFilePath) VALUES (?, ?, ?, ?)";
         try(Connection conn = DBConnector.getStaticConnection()) {
             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             stmt.setString(1, movie.getName());
             stmt.setFloat(2, movie.getImdbRating());
             stmt.setFloat(3, movie.getPersonalRating());
-            stmt.setString(4, movie.getFilePath());
+            stmt.setString(4, movie.getPictureFilePath());
             stmt.executeUpdate();
 
             try (ResultSet keys = stmt.getGeneratedKeys()) {

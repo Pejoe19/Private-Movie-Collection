@@ -44,7 +44,7 @@
         <TextField fx:id="txtPersonalRating" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
         <Label fx:id="LFilePath" style="-fx-text-fill: black;" text="File Path:" GridPane.rowIndex="4" />
-        <TextField fx:id="txtFilePath" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+        <TextField fx:id="txtPictureFilePath" GridPane.columnIndex="1" GridPane.rowIndex="4" />
       <columnConstraints>
          <ColumnConstraints />
          <ColumnConstraints />
