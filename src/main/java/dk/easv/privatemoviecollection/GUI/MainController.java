@@ -21,12 +21,9 @@ import org.kordamp.ikonli.javafx.FontIcon;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 
-import java.awt.*;
 import java.io.IOException;
 import java.io.File;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
 
 
 public class MainController {
@@ -292,7 +289,7 @@ public class MainController {
         FXMLLoader loader = new FXMLLoader();
         Scene scene = setScene(loader, "/dk/easv/privatemoviecollection/movieView.fxml");
 
-        MovieController movieController = loader.getController();
+        MovieDetailsController movieController = loader.getController();
         movieController.setModel(model);
         movieController.init(movie);
 

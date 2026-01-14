@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class MovieController {
+public class MovieDetailsController {
 
     @FXML
     private WebView webView;

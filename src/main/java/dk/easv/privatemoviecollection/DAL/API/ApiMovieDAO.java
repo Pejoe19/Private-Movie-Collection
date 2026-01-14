@@ -26,12 +26,10 @@ public class ApiMovieDAO {
         try {
             Map<String, Object> map = mapper.readValue(movieDataJson, Map.class);
             List<Map<String, Object>> movies = (List<Map<String, Object>>) map.get("results");
-            System.out.println(movies);
             if (!movies.isEmpty()) {
                 Map<String, Object> firstMovie = movies.getFirst();
 
-                System.out.println(firstMovie.get("image"));
-                if (firstMovie.get("image") != null) {
+                if (firstMovie.get("poster_path") != null) {
                     String movieName = (String) firstMovie.get("original_title");
                     String movieOverview = (String) firstMovie.get("overview");
                     String trailerApiKey = getTrailerKey(String.valueOf(firstMovie.get("id")));
