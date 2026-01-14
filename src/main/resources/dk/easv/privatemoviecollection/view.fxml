@@ -102,7 +102,7 @@
                   <Insets />
                </HBox.margin>
             </Button>
-            <Button fx:id="BtnAddChangePR" mnemonicParsing="false" prefHeight="26.0" prefWidth="180.0" text="Change Ratings">
+            <Button fx:id="BtnAddChangePR" mnemonicParsing="false" onAction="#onChangeRating" prefHeight="26.0" prefWidth="180.0" text="Change Ratings">
                <HBox.margin>
                   <Insets />
                </HBox.margin>

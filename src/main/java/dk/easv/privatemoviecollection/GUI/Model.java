@@ -93,4 +93,16 @@ public class Model {
     public ArrayList<Genre> getMovieGenres(Movie movie) {
         return movieManager.getMovieGenres(movie);
     }
+
+    public void updatePersonalRating(Movie movie, float rating) {
+        movieManager.updatePersonalRating(movie, rating);
+
+        // Refresh UI table row
+        for (int i = 0; i < observableList.size(); i++) {
+            if (observableList.get(i).getId() == movie.getId()) {
+                observableList.set(i, movie); // Triggers UI redraw
+                break;
+            }
+        }
+    }
 }

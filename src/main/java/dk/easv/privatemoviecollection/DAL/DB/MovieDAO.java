@@ -133,4 +133,18 @@ public class MovieDAO implements IMovieDataAccess {
             throw new RuntimeException(e);
         }
     }
+
+    public void updatePersonalRating(int movieId, float newRating) {
+        String sql = "UPDATE dbo.Movie SET PersonalRating = ? WHERE Id = ?";
+        try (Connection conn = DBConnector.getStaticConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setFloat(1, newRating);
+            stmt.setInt(2, movieId);
+            stmt.executeUpdate();
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

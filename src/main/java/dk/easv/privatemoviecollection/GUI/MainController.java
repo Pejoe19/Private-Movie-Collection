@@ -384,4 +384,29 @@ public class MainController {
 
         stage.show();
     }
+
+    @FXML
+    private void onChangeRating(ActionEvent event) {
+        Movie selectedMovie = tblView.getSelectionModel().getSelectedItem();
+
+        if (selectedMovie == null) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Please select a movie first.");
+            alert.showAndWait();
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/dk/easv/privatemoviecollection/changeRatingView.fxml"));
+            Scene scene = new Scene(loader.load());
+
+            ChangeRatingController controller = loader.getController();
+            controller.setModel(model);
+            controller.init(selectedMovie);
+
+            showStage(event, "Change Rating", scene);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

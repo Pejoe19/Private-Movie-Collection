@@ -100,4 +100,9 @@ public class MovieManager {
             genreData.createGenre(movie, genreId);
         }
     }
+
+    public void updatePersonalRating(Movie movie, float rating) {
+        movieData.updatePersonalRating(movie.getId(), rating);
+        movie.setPersonalRating(rating);
+    }
 }
