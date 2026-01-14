@@ -72,10 +72,7 @@ public class MainController {
         setupTable();
 
         movies = model.getMovies();
-        filteredMovies = new FilteredList<>(
-                movies,
-                movie -> true
-        );
+        filteredMovies = new FilteredList<>(movies, movie -> true);
 
         SortedList<Movie> sortedMovies = new SortedList<>(filteredMovies);
         sortedMovies.comparatorProperty().bind(tblView.comparatorProperty());

@@ -29,12 +29,12 @@ public class ApiMovieDAO {
             if (!movies.isEmpty()) {
                 Map<String, Object> firstMovie = movies.getFirst();
 
-                if (firstMovie.get("poster_path") != null) {
+                if (firstMovie.get("poster_path") != null && firstMovie.get("overview") != "") {
                     String movieName = (String) firstMovie.get("original_title");
                     String movieOverview = (String) firstMovie.get("overview");
                     String trailerApiKey = getTrailerKey(String.valueOf(firstMovie.get("id")));
                     ArrayList<Integer> movieGenreIdList = (ArrayList<Integer>) firstMovie.get("genre_ids");
-                    String movieImagePath = (String) firstMovie.get("poster_path");
+                    String movieImagePath = (String) "https://image.tmdb.org/t/p/w200" + firstMovie.get("poster_path");
 
                     return new Movie(movieName, movieGenreIdList, movieOverview, movieImagePath, trailerApiKey);
                 }
@@ -48,15 +48,18 @@ public class ApiMovieDAO {
     }
 
     private String getTrailerKey(String id) {
-         String videoDataJson = apiConnector.getJsonFromApi("https://api.themoviedb.org/3/movie/" + id + "/videos?api_key=");
+        String videoDataJson = apiConnector.getJsonFromApi("https://api.themoviedb.org/3/movie/" + id + "/videos?api_key=");
 
         ObjectMapper mapper = new ObjectMapper();
         try {
             Map<String, Object> map = mapper.readValue(videoDataJson, Map.class);
-            List<Map<String, Object>> videoData = (List<Map<String, Object>>) map.get("results");
-            Map<String, Object> firstVideo = videoData.getFirst();
 
-            return firstVideo.get("key").toString();
+            List<Map<String, Object>> videoData = (List<Map<String, Object>>) map.get("results");
+            if(!videoData.isEmpty()) {
+                Map<String, Object> firstVideo = videoData.getFirst();
+                return firstVideo.get("key").toString();
+            }
+            return "";
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

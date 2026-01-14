@@ -1,12 +1,16 @@
 package dk.easv.privatemoviecollection.GUI;
 
-import dk.easv.privatemoviecollection.BLL.MovieException;
+import dk.easv.privatemoviecollection.BLL.MovieManager;
 import dk.easv.privatemoviecollection.Be.Genre;
 import dk.easv.privatemoviecollection.Be.Movie;
-import javafx.collections.FXCollections;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -14,6 +18,9 @@ import java.util.List;
 
 public class MovieEditController {
 
+    @FXML private HBox hBoxMovieFound;
+    @FXML private Text txtMovieApiTitle;
+    @FXML private ImageView ivMovie;
     @FXML private VBox checkListsLeft;
     @FXML private VBox checkListsRight;
     @FXML private Label lblHeader;
@@ -27,10 +34,19 @@ public class MovieEditController {
     private Model model;
     private boolean createMode = true;
     private Movie currentMovie;
-    ArrayList<CheckBox> checkBoxes = new ArrayList<>();
+    private ArrayList<CheckBox> checkBoxes = new ArrayList<>();
     private Movie editingMovie;
+    private Movie movieFound;
 
     public MovieEditController() {
+    }
+
+    public void initialize(){
+        if(createMode){
+            txtTitle.textProperty().addListener((observable, oldValue, newValue) -> searchApiMovie(newValue));
+        }
+
+        hBoxMovieFound.setOnMouseClicked(movie -> loadMovieData());
     }
 
     public void init(String genres) {generateCheckboxes(new ArrayList<>());}
@@ -53,6 +69,35 @@ public class MovieEditController {
             left = !left;
             checkBoxes.add(cb);
         }
+    }
+
+    private void searchApiMovie(String titleString) {
+        String titleText = titleString.toLowerCase().trim();
+        Movie movieFound = model.getMovieData(titleText);
+        if(movieFound != null){
+            if(movieFound.getFilePath() != null){
+                this.movieFound = movieFound;
+                hBoxMovieFound.setVisible(true);
+                ivMovie.setImage(new Image(movieFound.getFilePath(),true));
+                txtMovieApiTitle.setText(movieFound.getName());
+            }
+        } else {
+            hBoxMovieFound.setVisible(false);
+            txtMovieApiTitle.setText("");
+            this.movieFound = null;
+        }
+    }
+
+    private void loadMovieData() {
+        System.out.println(movieFound.getGenres());
+        for(int genreId : movieFound.getGenres()){
+            for(CheckBox checkBox : checkBoxes){
+                if(genreId == Integer.parseInt(checkBox.getId())){
+                    checkBox.setSelected(true);
+                }
+            }
+        }
+        txtFilePath.setText(movieFound.getFilePath());
     }
 
     public void showCreateMode() {
@@ -88,8 +133,6 @@ public class MovieEditController {
         this.currentMovie = movie;
 
         txtTitle.setText(movie.getName());
-
-        //cbGenre.setText(movie.getGenresString());
         txtImdbRating.setText(String.valueOf(movie.getImdbRating()));
         txtPersonalRating.setText(String.valueOf(movie.getPersonalRating()));
         txtFilePath.setText(movie.getFilePath());
@@ -121,9 +164,16 @@ public class MovieEditController {
             return;
         }
         if (createMode) {
-            Movie movie = new Movie(title, genreIds, imdbRating, personalRating, filePath);
+            Movie movie;
+            if (movieFound != null){
+                movie = movieFound;
+            } else {
+                movie = new Movie(title, genreIds, imdbRating, personalRating, filePath);
+            }
+            movie.setGenres(genreIds);
             movie.setGenresString(genreString);
-            System.out.println(movie.toString());
+            movie.setImdbRating(Float.parseFloat(txtImdbRating.getText()));
+            movie.setPersonalRating(Float.parseFloat(txtPersonalRating.getText()));
             model.createMovie(movie);
         } else {
             currentMovie.setName(title);
