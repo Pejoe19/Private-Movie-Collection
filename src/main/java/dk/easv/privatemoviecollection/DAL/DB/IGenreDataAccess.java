@@ -9,6 +9,6 @@ import java.util.List;
 public interface IGenreDataAccess {
         List<Genre> getAllGenres();
         ArrayList<Genre> getMovieGenres(Movie movie);
-        void createGenre(Movie movie, Genre genre);
+        void createGenre(Movie movie, Integer genreId);
         void deleteGenre(Movie movie, Genre genre);
 }

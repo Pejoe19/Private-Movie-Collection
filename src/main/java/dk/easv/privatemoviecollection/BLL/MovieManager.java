@@ -68,7 +68,7 @@ public class MovieManager {
 
         for (Genre newGenre : newGenres){
             if (!movieGenresBefore.contains(newGenre)){
-                genreData.createGenre(movie, newGenre);
+                genreData.createGenre(movie, newGenre.getId());
             }
             if(newGenres.getFirst().equals(newGenre)){
                 genreString += newGenre.getName();
@@ -93,5 +93,11 @@ public class MovieManager {
 
     public void updateMovie(Movie movie) {
         movieData.updateMovie(movie);
+    }
+
+    public void addMovieGenres(Movie movie) {
+        for (Integer genreId : movie.getGenres()){
+            genreData.createGenre(movie, genreId);
+        }
     }
 }

@@ -42,8 +42,8 @@ public class Model {
     }
 
     public void createMovie(Movie movie) {
-        System.out.println(movie.toString());
         movieManager.addMovieToDatabase(movie);
+        movieManager.addMovieGenres(movie);
         getMovies().add(movie);
     }
 

@@ -83,13 +83,13 @@ public class GenreDAO implements IGenreDataAccess {
         }
     }
 
-    public void createGenre(Movie movie, Genre genre) {
+    public void createGenre(Movie movie, Integer genreId) {
         String sqlDelete = "INSERT INTO dbo.CatMovie (GenreId, MovieId) VALUES (?,?)";
 
         try (Connection conn = DBConnector.getStaticConnection();
              PreparedStatement stmtDelete = conn.prepareStatement(sqlDelete)) {
 
-            stmtDelete.setInt(1, genre.getId());
+            stmtDelete.setInt(1, genreId);
             stmtDelete.setInt(2, movie.getId());
             stmtDelete.executeUpdate();
 

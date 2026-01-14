@@ -89,7 +89,6 @@ public class MovieEditController {
     }
 
     private void loadMovieData() {
-        System.out.println(movieFound.getGenres());
         for(int genreId : movieFound.getGenres()){
             for(CheckBox checkBox : checkBoxes){
                 if(genreId == Integer.parseInt(checkBox.getId())){
