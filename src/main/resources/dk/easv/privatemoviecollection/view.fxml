@@ -32,10 +32,10 @@
          <children>
             <MenuButton mnemonicParsing="false" prefHeight="26.0" prefWidth="250.0" text="Sort">
               <items>
-                <MenuItem mnemonicParsing="false" style="-fx-backgroundcolor: black;" text="Title" />
-                <MenuItem mnemonicParsing="false" style="-fx-backgroundcolor: black;" text="Category" />
-                  <MenuItem mnemonicParsing="false" style="-fx-backgroundcolor: black;" text="IMDb Rating" />
-                  <MenuItem mnemonicParsing="false" style="-fx-backgroundcolor: black;" text="Personal Rating" />
+                <MenuItem mnemonicParsing="false" style="-fx-backgroundcolor: black" text="Title" fx:id="MISortTitle" onAction="#onSortTitle"/>
+                <MenuItem mnemonicParsing="false" style="-fx-backgroundcolor: black;" text="Category" fx:id="MISortCategory" onAction="#onSortCategory"/>
+                  <MenuItem mnemonicParsing="false" style="-fx-backgroundcolor: black;" text="IMDb Rating" fx:id="MISortIMDb" onAction="#onSortIMDb"/>
+                  <MenuItem mnemonicParsing="false" style="-fx-backgroundcolor: black;" text="Personal Rating" fx:id="MISortPersonal" onAction="#onSortPersonal" />
               </items>
             </MenuButton>
             <MenuButton fx:id="MBFilter" mnemonicParsing="false" prefHeight="26.0" prefWidth="250.0" text="Filter">

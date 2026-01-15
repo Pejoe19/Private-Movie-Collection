@@ -56,6 +56,7 @@ public class MainController {
     private Image defaultImage = new Image(getClass().getResourceAsStream("/dk/easv/privatemoviecollection/Default_Movie_Picture.jpg"));
     private FilteredList<Movie> filteredMovies;
     private ObservableList<Movie> movies;
+    private SortedList<Movie> sortedMovies;
 
     /**
      * Construtor for Main Controller.
@@ -74,7 +75,7 @@ public class MainController {
         movies = model.getMovies();
         filteredMovies = new FilteredList<>(movies, movie -> true);
 
-        SortedList<Movie> sortedMovies = new SortedList<>(filteredMovies);
+        sortedMovies = new SortedList<>(filteredMovies);
         sortedMovies.comparatorProperty().bind(tblView.comparatorProperty());
 
         tblView.setItems(sortedMovies);
@@ -408,5 +409,29 @@ public class MainController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    public void onSortTitle(ActionEvent actionEvent) {
+        tblColName.setSortType(TableColumn.SortType.ASCENDING);
+        tblView.getSortOrder().setAll(tblColName);
+    }
+
+    @FXML
+    public void onSortCategory(ActionEvent actionEvent) {
+        tblColGenre.setSortType(TableColumn.SortType.ASCENDING);
+        tblView.getSortOrder().setAll(tblColGenre);
+    }
+
+    @FXML
+    public void onSortIMDb(ActionEvent actionEvent) {
+        tblColIMDbRating.setSortType(TableColumn.SortType.ASCENDING);
+        tblView.getSortOrder().setAll(tblColIMDbRating);
+    }
+
+    @FXML
+    public void onSortPersonal(ActionEvent actionEvent) {
+        tblColPRating.setSortType(TableColumn.SortType.ASCENDING);
+        tblView.getSortOrder().setAll(tblColPRating);
     }
 }
